@@ -30,9 +30,9 @@ file (GLOB QRC_SOURCE_FILES resources/iGameMeshLab.qrc)
 file (GLOB UI_SOURCE_FILES GUI/iGameMeshLab.ui)
 
 file (GLOB SHADER_FILES
-        resources/shaders/*.frag
-        resources/shaders/*.vert
-        resources/shaders/*.shader
+        Resources/shaders/*.frag
+        Resources/shaders/*.vert
+        Resources/shaders/*.shader
         )
 
 file (GLOB GUI_FILE
@@ -44,6 +44,10 @@ file (GLOB GUI_FILE
 
 file (GLOB GL_FILE
         GL/*.*
+        )
+
+file (GLOB ACTOR_FILE
+        Actors/*.*
         )
 
 file (GLOB MATERIAL_FILE
@@ -58,6 +62,7 @@ include_directories(GUI/)
 include_directories(GL/)
 include_directories(GL/Materials/)
 include_directories(MeshKernel/)
+include_directories(Actors/)
 
 add_executable(iGameMeshLab
     ${QRC_SOURCE_FILES}
@@ -67,6 +72,7 @@ add_executable(iGameMeshLab
     ${MATERIAL_FILE}
     ${SHADER_FILES}
     ${MeshKernel_FILE}
+    ${ACTOR_FILE}
 )
 
 source_group(Shader FILES ${SHADER_FILES})
@@ -74,6 +80,7 @@ source_group(GUI FILES ${GUI_FILE})
 source_group(GL FILES ${GL_FILE})
 source_group(GL/Materials FILES ${MATERIAL_FILE})
 source_group(MeshKernel FILES ${MeshKernel_FILE})
+source_group(GL/Actors FILES ${ACTOR_FILE})
 
 # 配置运行时的环境
 string(CONCAT QT_BIN_PATH ${QT_MSVC_PATH} "/bin")
