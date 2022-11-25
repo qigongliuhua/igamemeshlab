@@ -10,7 +10,8 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
 # QT编译器路径
-set(QT_MSVC_PATH "C:/Qt/Qt5.14.2/5.14.2/msvc2017_64")
+# set(QT_MSVC_PATH "C:/Qt/Qt5.14.2/5.14.2/msvc2017_64") #笔记本的路径
+set(QT_MSVC_PATH "D:/Users/CL/Qt/Qt5.14.2/5.14.2/msvc2017_64") #台式机的路径
 string(CONCAT QT_CMAKE_PATH ${QT_MSVC_PATH} "/lib/cmake/Qt5")
 
 list(APPEND CMAKE_PREFIX_PATH ${QT_CMAKE_PATH})

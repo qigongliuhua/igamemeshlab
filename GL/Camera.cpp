@@ -47,32 +47,16 @@ void Camera::reset_projection()
 
 void Camera::reset_projection_persp() 
 {
-    static constexpr double fov = 55; // vertical field of view, in degrees.
+    static constexpr double fov = 90; // vertical field of view, in degrees.
     // A 55 degrees fov in perspective mode
     // is roughly equivalent to no zoom in
     // orthographic mode
 
 
-    //projection = frustum_persp(fov * zoom_factor,    // vertical field of view
-    //    (double)width / height, // aspect ratio
-    //    2 * scene_radius,       // near
-    //    6 * scene_radius);      // far
-
-	double ar = (double)width / height; // aspect ratio
-
-	//projection = frustum_persp(-2 * scene_radius * zoom_factor * ar, // left
-	//	2 * scene_radius * zoom_factor * ar, // right
-	//	-2 * scene_radius * zoom_factor,      // bottom
-	//	2 * scene_radius * zoom_factor,      // top
-	//	0.01 * scene_radius,                    // near
-	//	100 * scene_radius);                   // far
-
-	projection = frustum_persp(-2 * ar, // left
-		2 *  ar, // right
-		-2 ,      // bottom
-		2 ,      // top
-		1,                    // near
-		1000);                   // far
+    projection = frustum_persp(fov * zoom_factor,    // vertical field of view
+        (double)width / height, // aspect ratio
+        0.01 * scene_radius,       // near
+        100 * scene_radius);      // far
 }
 
 
@@ -201,18 +185,18 @@ void Camera::deserialize(const std::string& s)
         >> scene_center[0] >> scene_center[1] >> scene_center[2]
         >> scene_radius
         >> zoom_factor
-        >> model.row(0)[0] >> model.row(0)[1] >> model.row(0)[2] >> model.row(0)[3]
-        >> model.row(1)[0] >> model.row(1)[1] >> model.row(1)[2] >> model.row(1)[3]
-        >> model.row(2)[0] >> model.row(2)[1] >> model.row(2)[2] >> model.row(2)[3]
-        >> model.row(3)[0] >> model.row(3)[1] >> model.row(3)[2] >> model.row(3)[3]
-        >> view.row(0)[0] >> view.row(0)[1] >> view.row(0)[2] >> view.row(0)[3]
-        >> view.row(1)[0] >> view.row(1)[1] >> view.row(1)[2] >> view.row(1)[3]
-        >> view.row(2)[0] >> view.row(2)[1] >> view.row(2)[2] >> view.row(2)[3]
-        >> view.row(3)[0] >> view.row(3)[1] >> view.row(3)[2] >> view.row(3)[3]
-        >> projection.row(0)[0] >> projection.row(0)[1] >> projection.row(0)[2] >> projection.row(0)[3]
-        >> projection.row(1)[0] >> projection.row(1)[1] >> projection.row(1)[2] >> projection.row(1)[3]
-        >> projection.row(2)[0] >> projection.row(2)[1] >> projection.row(2)[2] >> projection.row(2)[3]
-        >> projection.row(3)[0] >> projection.row(3)[1] >> projection.row(3)[2] >> projection.row(3)[3];
+        >> model.data()[0] >> model.data()[1] >> model.data()[2] >> model.data()[3]
+        >> model.data()[4] >> model.data()[5] >> model.data()[6] >> model.data()[7]
+        >> model.data()[8] >> model.data()[9] >> model.data()[10] >> model.data()[11]
+        >> model.data()[12] >> model.data()[13] >> model.data()[14] >> model.data()[15]
+        >> view.data()[0] >> view.data()[1] >> view.data()[2] >> view.data()[3]
+		>> view.data()[4] >> view.data()[5] >> view.data()[6] >> view.data()[7]
+		>> view.data()[8] >> view.data()[9] >> view.data()[10] >> view.data()[11]
+		>> view.data()[12] >> view.data()[13] >> view.data()[14] >> view.data()[15]
+        >> projection.data()[0] >> projection.data()[1] >> projection.data()[2] >> projection.data()[3]
+        >> projection.data()[4] >> projection.data()[5] >> projection.data()[6] >> projection.data()[7]
+        >> projection.data()[8] >> projection.data()[9] >> projection.data()[10] >> projection.data()[11]
+        >> projection.data()[12] >> projection.data()[13] >> projection.data()[14] >> projection.data()[15];
 }
 
 
