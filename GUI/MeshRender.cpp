@@ -198,11 +198,15 @@ void MeshRender::paintGL()
 void MeshRender::DrawScene()
 {
 	DrawBackGround();
-
-	Camera cam(width(), height());
+	int w = width();
+	int h = width();
+	Camera cam(1173, 741);
+	//cam.toggle_persp_ortho();
+	//cam.toggle_persp_ortho();
+	
 	cam.print();
 	Light light;
-	light.light_pos = -QVector3D(0,0, 4*cam.scene_radius);
+	light.light_pos = QVector3D(0,0, 4*cam.scene_radius);
 	light.light_color = { 1,1,1 };
 	material2.render(cam, light);
 }

@@ -39,18 +39,18 @@ uniform vec3 lightColor = vec3(1.0, 1.0, 1.0);
 void main()
 {
 	// ambient
-	float ambientStrength = 0.6;
+	float ambientStrength = 0.4;
 	vec3 ambient = ambientStrength * lightColor;
 
 	// diffuse 
-	float diffuseStrength = 0.3;
+	float diffuseStrength = 0.5;
 	vec3 norm = normalize(Normal);
 	vec3 lightDir = normalize(lightPos - FragPos);
 	float diff = max(dot(norm, lightDir), 0.0);
 	vec3 diffuse = diffuseStrength * diff * lightColor;
 
 	// specular
-	float specularStrength = 0.1;
+	float specularStrength = 0.5;
 	vec3 viewDir = normalize(viewPos - FragPos);
 	vec3 h = normalize(viewPos + lightDir); //blinn-phong
 	float spec = pow(max(dot(h, norm), 0.0), 32);

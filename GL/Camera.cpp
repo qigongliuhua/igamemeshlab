@@ -1,10 +1,12 @@
-﻿#include "Camera.h"
+#include "Camera.h"
 #include <QVector4D>
 #include <sstream> 
 #include <iostream> 
 
-Camera::Camera(const int width, const int height)
+Camera::Camera(const int width_, const int height_)
 {
+	width = width_;
+	height = height_;
     scene_center = QVector3D(0, 0, 0);
     scene_radius = 1;
     reset();
@@ -20,7 +22,9 @@ void Camera::reset()
 void Camera::reset_matrices()
 {
     reset_modelview();
-    reset_projection();
+    //reset_projection();
+	//reset_projection_ortho();
+	reset_projection_persp();
 }
 
 void Camera::reset_modelview()
@@ -48,10 +52,27 @@ void Camera::reset_projection_persp()
     // is roughly equivalent to no zoom in
     // orthographic mode
 
-    projection = frustum_persp(fov * zoom_factor,    // vertical field of view
-        (double)width / height, // aspect ratio
-        2 * scene_radius,       // near
-        6 * scene_radius);      // far
+
+    //projection = frustum_persp(fov * zoom_factor,    // vertical field of view
+    //    (double)width / height, // aspect ratio
+    //    2 * scene_radius,       // near
+    //    6 * scene_radius);      // far
+
+	double ar = (double)width / height; // aspect ratio
+
+	//projection = frustum_persp(-2 * scene_radius * zoom_factor * ar, // left
+	//	2 * scene_radius * zoom_factor * ar, // right
+	//	-2 * scene_radius * zoom_factor,      // bottom
+	//	2 * scene_radius * zoom_factor,      // top
+	//	0.01 * scene_radius,                    // near
+	//	100 * scene_radius);                   // far
+
+	projection = frustum_persp(-2 * ar, // left
+		2 *  ar, // right
+		-2 ,      // bottom
+		2 ,      // top
+		1,                    // near
+		1000);                   // far
 }
 
 
@@ -63,8 +84,8 @@ void Camera::reset_projection_ortho()
         2 * scene_radius * zoom_factor * ar, // right
         -2 * scene_radius * zoom_factor,      // bottom
         2 * scene_radius * zoom_factor,      // top
-        2 * scene_radius,                    // near
-        6 * scene_radius);                   // far
+        0.01 * scene_radius,                    // near
+        100 * scene_radius);                   // far
 }
 
 void Camera::set_rotation_pivot(const QVector3D& p)
