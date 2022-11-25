@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/iGameMeshLab"/>
+    <qresource prefix="/shaders">
+        <file>shaders/blinnphong.shader</file>
+        <file>shaders/flat.shader</file>
+    </qresource>
+</RCC>
