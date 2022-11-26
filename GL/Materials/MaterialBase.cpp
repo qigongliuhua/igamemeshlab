@@ -1,9 +1,10 @@
-#include "MaterialBase.h"
+﻿#include "MaterialBase.h"
 
 MaterialBase::~MaterialBase()
 {
 	clear();
 }
+
 
 void MaterialBase::set_shaders(std::vector<GLfloat>& verts, int vertex_size, std::vector<int> offset_in_one_vertex)
 {
@@ -28,7 +29,7 @@ void MaterialBase::set_shaders(std::vector<GLfloat>& verts, int vertex_size, std
 	core->glBindVertexArray(0);
 	core->glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-	drawable_size = verts.size() / vertex_size; //绘制单元数量
+	drawable_size = (GLuint)verts.size() / vertex_size; //绘制单元数量
 }
 
 void MaterialBase::render(Camera& camera)

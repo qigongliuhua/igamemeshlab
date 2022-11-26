@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #define _USE_MATH_DEFINES
 
@@ -9,7 +9,6 @@
 #include <Eigen/Geometry>
 #include "Camera.h"
 #include "Materials.h"
-#include "Mesh.h"
 #include "Light.h"
 #include "A_Background.h"
 
@@ -54,7 +53,6 @@ protected:
 
 	A_Background background;
 
-	MeshKernel::SurfaceMesh mesh;
 	Camera camera;
 	Light light;
 	

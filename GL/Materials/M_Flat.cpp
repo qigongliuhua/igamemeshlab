@@ -33,7 +33,7 @@ void M_Flat::set_shaders(const std::vector<GLfloat>& verts_and_colors)
 	core->glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 
-	drawable_size = verts_and_colors.size() / 6; //绘制单元数量
+	drawable_size = (GLuint)verts_and_colors.size() / 6; //绘制单元数量
 
 }
 

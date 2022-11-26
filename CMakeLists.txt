@@ -10,8 +10,8 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
 # QT编译器路径
-# set(QT_MSVC_PATH "C:/Qt/Qt5.14.2/5.14.2/msvc2017_64") #笔记本的路径
-set(QT_MSVC_PATH "D:/Users/CL/Qt/Qt5.14.2/5.14.2/msvc2017_64") #台式机的路径
+set(QT_MSVC_PATH "C:/Qt/Qt5.14.2/5.14.2/msvc2017_64") #笔记本的路径
+#set(QT_MSVC_PATH "D:/Users/CL/Qt/Qt5.14.2/5.14.2/msvc2017_64") #台式机的路径
 string(CONCAT QT_CMAKE_PATH ${QT_MSVC_PATH} "/lib/cmake/Qt5")
 
 list(APPEND CMAKE_PREFIX_PATH ${QT_CMAKE_PATH})
@@ -21,6 +21,7 @@ find_package(Qt5 COMPONENTS OpenGL REQUIRED)
 find_package(Qt5 COMPONENTS Core REQUIRED)
 find_package(Qt5 COMPONENTS Gui REQUIRED)
 find_package(Qt5 COMPONENTS Gui REQUIRED)
+
 
 # 设置VCPKG_ROOT所在的位置
 set(VCPKG_ROOT "${CMAKE_SOURCE_DIR} D:/Projects/vcpkg/scripts/buildsystems/vcpkg.cmake" CACHE PATH "")
@@ -54,14 +55,9 @@ file (GLOB MATERIAL_FILE
         GL/Materials/*.*
         )
 
-file (GLOB MeshKernel_FILE
-        MeshKernel/*.*
-        )
-
 include_directories(GUI/)
 include_directories(GL/)
 include_directories(GL/Materials/)
-include_directories(MeshKernel/)
 include_directories(Actors/)
 
 add_executable(iGameMeshLab
@@ -71,15 +67,13 @@ add_executable(iGameMeshLab
     ${GL_FILE}
     ${MATERIAL_FILE}
     ${SHADER_FILES}
-    ${MeshKernel_FILE}
     ${ACTOR_FILE}
 )
 
-source_group(Shader FILES ${SHADER_FILES})
 source_group(GUI FILES ${GUI_FILE})
 source_group(GL FILES ${GL_FILE})
 source_group(GL/Materials FILES ${MATERIAL_FILE})
-source_group(MeshKernel FILES ${MeshKernel_FILE})
+source_group(GL/Shader FILES ${SHADER_FILES})
 source_group(GL/Actors FILES ${ACTOR_FILE})
 
 # 配置运行时的环境

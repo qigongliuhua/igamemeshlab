@@ -1,9 +1,8 @@
-#include "MeshRender.h"
+﻿#include "MeshRender.h"
 #include <iostream>
 #include <QApplication>
 #include <QMouseEvent>
 #include <QtWidgets/QDesktopWidget>
-#include "IO.h"
 #include "ShaderUtils.h"
 
 
@@ -15,11 +14,6 @@ MeshRender::MeshRender(QWidget*parent)
 	//QSurfaceFormat surfaceFormat;
 	//surfaceFormat.setSamples(16);//多重采样
 	//setFormat(surfaceFormat); //setFormat是QOpenGLWidget的函数
-
-	MeshKernel::IO io;
-	int side_num;
-	mesh = io.ReadObjFile("D:\\Projects\\test\\iGameMeshLab\\Model\\bunny.obj", side_num);
-	mesh.genAllVerticesNormal();
 }
 
 MeshRender::~MeshRender()
