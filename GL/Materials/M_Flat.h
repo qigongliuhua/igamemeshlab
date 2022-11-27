@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "MaterialBase.h"
 
 
@@ -14,8 +14,5 @@ public:
     void set_shaders(const std::vector<GLfloat>& verts_and_colors);
     void set_shaders(const std::vector<GLfloat>& pos, const std::vector<GLfloat>& colors);
     void set_shaders(const std::vector<GLfloat>& pos, GLfloat r, GLfloat g, GLfloat b);
-
-
-
 };
 

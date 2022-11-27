@@ -1,8 +1,7 @@
-#pragma once
+﻿#pragma once
 
 // https://github.com/mlivesu/cinolib/blob/master/include/cinolib/gl/camera.h
 
-#define _USE_MATH_DEFINES
 
 #include <QMatrix4x4>
 #include <QVector3D>
@@ -18,7 +17,7 @@ public:
 	QMatrix4x4	model;			// from OBJECT space to WORLD  space
 	QMatrix4x4	view;			// from WORLD  space to CAMERA space
 	QMatrix4x4	projection;		// defines the view frustum
-
+	double fov = 26;
 	//::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 	Camera(const int width_ = 640, const int height_ = 480);

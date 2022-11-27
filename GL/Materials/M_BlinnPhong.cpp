@@ -1,4 +1,4 @@
-#include "M_BlinnPhong.h"
+﻿#include "M_BlinnPhong.h"
 #include "ShaderUtils.h"
 #include <iostream>
 
@@ -36,7 +36,7 @@ void M_BlinnPhong::set_shaders(const std::vector<GLfloat>& verts)
 	core->glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 
-	drawable_size = verts.size() / 9; //绘制单元数量
+	drawable_size = (GLuint)verts.size() / 9; //绘制单元数量
 
 }
 
@@ -69,7 +69,7 @@ void M_BlinnPhong::set_shaders(const std::vector<GLfloat>& pos, const std::vecto
 	core->glBindVertexArray(0);
 	core->glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-	drawable_size = pos.size() / 3; //绘制单元数量
+	drawable_size = (GLuint)pos.size() / 3; //绘制单元数量
 }
 
 void M_BlinnPhong::set_shaders(const std::vector<GLfloat>& pos, GLfloat r, GLfloat g, GLfloat b)
@@ -93,6 +93,7 @@ void M_BlinnPhong::render(Camera& camera, Light& light)
 {
 	shader.bind();
 
+	shader.setUniformValue("normalMode", (int)normal_mode);
 	shader.setUniformValue("lightPos", light.light_pos);
 	shader.setUniformValue("lightColor", light.light_color);
 

@@ -1,4 +1,4 @@
-#include "A_Background.h"
+﻿#include "A_Background.h"
 
 void A_Background::init(QOpenGLFunctions_3_3_Core* core_)
 {

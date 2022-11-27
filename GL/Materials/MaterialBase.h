@@ -7,6 +7,7 @@
 #include <string>
 #include <Eigen/Core>
 #include "Camera.h"
+#include "MaterialEnum.h"
 
 class MaterialBase
 {
@@ -19,6 +20,7 @@ public:
 	virtual void load_shaders() = 0;
 	virtual	void set_shaders	(std::vector<GLfloat>& verts, int vertex_size, std::vector<int> offset_in_one_vertex);
 	virtual	void render		(Camera& camera);
+	virtual	void render(QMatrix4x4& M, QMatrix4x4& V, QMatrix4x4& P);
 	virtual	void render		();
 
 protected:

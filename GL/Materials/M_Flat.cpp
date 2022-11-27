@@ -1,4 +1,4 @@
-#include "M_Flat.h"
+﻿#include "M_Flat.h"
 #include "ShaderUtils.h"
 #include <iostream>
 
@@ -48,9 +48,9 @@ void M_Flat::set_shaders(const std::vector<GLfloat>& pos, const std::vector<GLfl
 	VBOs.resize(2, 0);
 	// 1.新建顶点数组对象
 	core->glGenVertexArrays(1, &VAOs[0]);
-	core->glGenBuffers(1, &VBOs[0]);
-	// 2. 绑定顶点数组对象
 	core->glBindVertexArray(VAOs[0]);
+	// 2. 绑定顶点数组对象
+	core->glGenBuffers(1, &VBOs[0]);
 	// 3. 把我们的顶点数组复制到一个顶点缓冲中，供OpenGL使用
 	core->glBindBuffer(GL_ARRAY_BUFFER, VBOs[0]);
 	core->glBufferData(GL_ARRAY_BUFFER, pos.size() * sizeof(GLfloat), pos.data(), GL_STATIC_DRAW);
@@ -66,14 +66,12 @@ void M_Flat::set_shaders(const std::vector<GLfloat>& pos, const std::vector<GLfl
 	core->glBindVertexArray(0);
 	core->glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-	drawable_size = pos.size() / 3; //绘制单元数量
+	drawable_size = (GLuint)pos.size() / 3; //绘制单元数量
 }
 
 void M_Flat::set_shaders(const std::vector<GLfloat>& pos, GLfloat r, GLfloat g, GLfloat b)
 {
 	assert(pos.size() % 3 == 0);
-
-	shader.bind();
 
 	std::vector<GLfloat> colors(pos.size());
 

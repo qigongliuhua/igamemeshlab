@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>iGameMeshLabClass</class>
- <widget class="QMainWindow" name="iGameMeshLabClass">
+ <class>iGameMeshLab</class>
+ <widget class="QMainWindow" name="iGameMeshLab">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -93,9 +93,6 @@
         <property name="bottomMargin">
          <number>0</number>
         </property>
-        <item>
-         <widget class="QOpenGLWidget" name="openGLWidget2"/>
-        </item>
        </layout>
       </widget>
       <widget class="QWidget" name="tab_3">
@@ -115,9 +112,6 @@
         <property name="bottomMargin">
          <number>0</number>
         </property>
-        <item>
-         <widget class="QOpenGLWidget" name="openGLWidget3"/>
-        </item>
        </layout>
       </widget>
      </widget>
@@ -137,12 +131,25 @@
     <property name="title">
      <string>文件</string>
     </property>
+    <widget class="QMenu" name="menu_3">
+     <property name="title">
+      <string>打开文件</string>
+     </property>
+     <addaction name="open_trimesh"/>
+     <addaction name="open_quadmesh"/>
+     <addaction name="open_polymesh"/>
+     <addaction name="separator"/>
+     <addaction name="open_tetmesh"/>
+     <addaction name="open_quadtimesh"/>
+     <addaction name="open_polytimesh"/>
+    </widget>
+    <addaction name="menu_3"/>
+    <addaction name="sava_mesh"/>
    </widget>
    <widget class="QMenu" name="menu_2">
     <property name="title">
      <string>编辑</string>
     </property>
-    <addaction name="action"/>
    </widget>
    <addaction name="menu"/>
    <addaction name="menu_2"/>
@@ -154,20 +161,31 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
-   <addaction name="action"/>
+   <addaction name="open_trimesh"/>
+   <addaction name="open_quadmesh"/>
+   <addaction name="open_polymesh"/>
+   <addaction name="open_tetmesh"/>
+   <addaction name="open_quadtimesh"/>
+   <addaction name="open_polytimesh"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <widget class="QDockWidget" name="dock_ViewTree">
    <property name="sizePolicy">
-    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+    <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
      <horstretch>0</horstretch>
      <verstretch>0</verstretch>
     </sizepolicy>
    </property>
    <property name="minimumSize">
     <size>
-     <width>300</width>
+     <width>350</width>
      <height>300</height>
+    </size>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>400</width>
+     <height>524287</height>
     </size>
    </property>
    <property name="features">
@@ -184,6 +202,9 @@
    </attribute>
    <widget class="QWidget" name="dockWidgetContents_4">
     <layout class="QVBoxLayout" name="verticalLayout_3">
+     <property name="spacing">
+      <number>0</number>
+     </property>
      <property name="leftMargin">
       <number>0</number>
      </property>
@@ -194,10 +215,64 @@
       <number>0</number>
      </property>
      <property name="bottomMargin">
-      <number>9</number>
+      <number>0</number>
      </property>
      <item>
-      <widget class="QListView" name="listView"/>
+      <widget class="QScrollArea" name="scrollArea_2">
+       <property name="sizeAdjustPolicy">
+        <enum>QAbstractScrollArea::AdjustToContentsOnFirstShow</enum>
+       </property>
+       <property name="widgetResizable">
+        <bool>true</bool>
+       </property>
+       <widget class="QWidget" name="scrollAreaWidgetContents_2">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>0</y>
+          <width>348</width>
+          <height>357</height>
+         </rect>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout_8">
+         <property name="spacing">
+          <number>0</number>
+         </property>
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <item>
+          <layout class="QVBoxLayout" name="sceneList">
+           <property name="spacing">
+            <number>0</number>
+           </property>
+           <item>
+            <spacer name="verticalSpacer">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>40</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </widget>
+      </widget>
      </item>
     </layout>
    </widget>
@@ -304,7 +379,7 @@
           <x>0</x>
           <y>0</y>
           <width>192</width>
-          <height>755</height>
+          <height>650</height>
          </rect>
         </property>
         <attribute name="label">
@@ -312,6 +387,14 @@
         </attribute>
        </widget>
        <widget class="QWidget" name="page_3">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>0</y>
+          <width>192</width>
+          <height>650</height>
+         </rect>
+        </property>
         <attribute name="label">
          <string>体网格</string>
         </attribute>
@@ -322,7 +405,7 @@
           <x>0</x>
           <y>0</y>
           <width>192</width>
-          <height>755</height>
+          <height>650</height>
          </rect>
         </property>
         <attribute name="label">
@@ -334,9 +417,310 @@
     </layout>
    </widget>
   </widget>
-  <action name="action">
+  <widget class="QDockWidget" name="dockWidget">
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>350</width>
+     <height>300</height>
+    </size>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>400</width>
+     <height>524287</height>
+    </size>
+   </property>
+   <property name="features">
+    <set>QDockWidget::DockWidgetMovable</set>
+   </property>
+   <property name="allowedAreas">
+    <set>Qt::BottomDockWidgetArea|Qt::LeftDockWidgetArea|Qt::RightDockWidgetArea</set>
+   </property>
+   <property name="windowTitle">
+    <string>显示设置</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>2</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents">
+    <layout class="QVBoxLayout" name="verticalLayout_4">
+     <property name="leftMargin">
+      <number>0</number>
+     </property>
+     <property name="topMargin">
+      <number>0</number>
+     </property>
+     <property name="rightMargin">
+      <number>0</number>
+     </property>
+     <property name="bottomMargin">
+      <number>0</number>
+     </property>
+     <item>
+      <widget class="QScrollArea" name="scrollArea">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="autoFillBackground">
+        <bool>false</bool>
+       </property>
+       <property name="verticalScrollBarPolicy">
+        <enum>Qt::ScrollBarAlwaysOn</enum>
+       </property>
+       <property name="horizontalScrollBarPolicy">
+        <enum>Qt::ScrollBarAlwaysOn</enum>
+       </property>
+       <property name="sizeAdjustPolicy">
+        <enum>QAbstractScrollArea::AdjustToContentsOnFirstShow</enum>
+       </property>
+       <property name="widgetResizable">
+        <bool>true</bool>
+       </property>
+       <widget class="QWidget" name="scrollAreaWidgetContents">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>0</y>
+          <width>327</width>
+          <height>338</height>
+         </rect>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout_5">
+         <item>
+          <widget class="QGroupBox" name="groupBox">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>280</width>
+             <height>100</height>
+            </size>
+           </property>
+           <property name="title">
+            <string>渲染</string>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout_6">
+            <item>
+             <layout class="QGridLayout" name="gridLayout">
+              <item row="3" column="1">
+               <widget class="QPushButton" name="toggle_coor">
+                <property name="text">
+                 <string>坐标系</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="1">
+               <widget class="QPushButton" name="normalMode_smooth">
+                <property name="text">
+                 <string>光滑模式</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="0">
+               <widget class="QPushButton" name="Btn_Background_color">
+                <property name="text">
+                 <string>背景颜色</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="0">
+               <widget class="QPushButton" name="Btn_model_point_color">
+                <property name="text">
+                 <string>顶点颜色</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="0">
+               <widget class="QPushButton" name="normalMode_flat">
+                <property name="text">
+                 <string>面片模式</string>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="0">
+               <widget class="QPushButton" name="toggle_model">
+                <property name="text">
+                 <string>显示/隐藏模型</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QPushButton" name="Btn_model_line_color">
+                <property name="text">
+                 <string>线框颜色</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <widget class="QGroupBox" name="groupBox_2">
+           <property name="title">
+            <string>相机</string>
+           </property>
+           <widget class="QWidget" name="layoutWidget">
+            <property name="geometry">
+             <rect>
+              <x>10</x>
+              <y>50</y>
+              <width>261</width>
+              <height>23</height>
+             </rect>
+            </property>
+            <layout class="QHBoxLayout" name="horizontalLayout_6">
+             <item>
+              <widget class="QLabel" name="label_2">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="minimumSize">
+                <size>
+                 <width>100</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>显示模式</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QComboBox" name="camera_persp_mode">
+               <item>
+                <property name="text">
+                 <string>透视模式</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>正交模式</string>
+                </property>
+               </item>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+           <widget class="QPushButton" name="reset_camera">
+            <property name="geometry">
+             <rect>
+              <x>10</x>
+              <y>80</y>
+              <width>261</width>
+              <height>28</height>
+             </rect>
+            </property>
+            <property name="text">
+             <string>复位视角</string>
+            </property>
+           </widget>
+           <widget class="QWidget" name="layoutWidget">
+            <property name="geometry">
+             <rect>
+              <x>10</x>
+              <y>20</y>
+              <width>261</width>
+              <height>23</height>
+             </rect>
+            </property>
+            <layout class="QHBoxLayout" name="horizontalLayout_5">
+             <item>
+              <widget class="QLabel" name="label">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="minimumSize">
+                <size>
+                 <width>100</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>FOV</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QSpinBox" name="camera_fov">
+               <property name="minimum">
+                <number>1</number>
+               </property>
+               <property name="maximum">
+                <number>179</number>
+               </property>
+               <property name="stepType">
+                <enum>QAbstractSpinBox::DefaultStepType</enum>
+               </property>
+               <property name="value">
+                <number>26</number>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <action name="open_trimesh">
    <property name="text">
-    <string>设置</string>
+    <string>三角形表面网格</string>
+   </property>
+  </action>
+  <action name="open_quadmesh">
+   <property name="text">
+    <string>四边形表面网格</string>
+   </property>
+  </action>
+  <action name="open_polymesh">
+   <property name="text">
+    <string>多边形表面网格</string>
+   </property>
+  </action>
+  <action name="open_tetmesh">
+   <property name="text">
+    <string>四面体网格</string>
+   </property>
+  </action>
+  <action name="open_quadtimesh">
+   <property name="text">
+    <string>六面体网格</string>
+   </property>
+  </action>
+  <action name="open_polytimesh">
+   <property name="text">
+    <string>多面体网格</string>
+   </property>
+  </action>
+  <action name="sava_mesh">
+   <property name="text">
+    <string>保存文件</string>
    </property>
   </action>
  </widget>
@@ -349,7 +733,7 @@
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="iGameMeshLab.qrc"/>
+  <include location="../Resources/iGameMeshLab.qrc"/>
  </resources>
  <connections/>
 </ui>

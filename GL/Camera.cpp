@@ -9,7 +9,11 @@ Camera::Camera(const int width_, const int height_)
 	height = height_;
     scene_center = QVector3D(0, 0, 0);
     scene_radius = 1;
-    reset();
+	
+	//reset();
+	zoom_factor = 0.5;
+	reset_modelview();
+	reset_projection_persp();
 }
 
 
@@ -22,9 +26,7 @@ void Camera::reset()
 void Camera::reset_matrices()
 {
     reset_modelview();
-    //reset_projection();
-	//reset_projection_ortho();
-	reset_projection_persp();
+    reset_projection();
 }
 
 void Camera::reset_modelview()
@@ -47,16 +49,18 @@ void Camera::reset_projection()
 
 void Camera::reset_projection_persp() 
 {
-    static constexpr double fov = 90; // vertical field of view, in degrees.
-    // A 55 degrees fov in perspective mode
-    // is roughly equivalent to no zoom in
-    // orthographic mode
-
-
     projection = frustum_persp(fov * zoom_factor,    // vertical field of view
         (double)width / height, // aspect ratio
         0.01 * scene_radius,       // near
         100 * scene_radius);      // far
+
+	//double ar = (double)width / height; // aspect ratio
+	//projection = frustum_persp(-2 * scene_radius * zoom_factor * ar, // left
+	//2 * scene_radius * zoom_factor * ar, // right
+	//-2 * scene_radius * zoom_factor,      // bottom
+	//2 * scene_radius * zoom_factor,      // top
+	//2 * scene_radius,                    // near
+	//6 * scene_radius);                   // far
 }
 
 

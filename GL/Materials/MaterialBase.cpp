@@ -5,7 +5,6 @@ MaterialBase::~MaterialBase()
 	clear();
 }
 
-
 void MaterialBase::set_shaders(std::vector<GLfloat>& verts, int vertex_size, std::vector<int> offset_in_one_vertex)
 {
 	shader.bind();
@@ -48,6 +47,21 @@ void MaterialBase::render(Camera& camera)
 	core->glBindVertexArray(0);
 }
 
+void MaterialBase::render(QMatrix4x4& M, QMatrix4x4& V, QMatrix4x4& P)
+{
+	shader.bind();
+	QMatrix4x4 ind;
+	shader.setUniformValue("M", M);	// 模型矩阵
+	shader.setUniformValue("V", V); // 视角矩阵
+	shader.setUniformValue("P", P); // 投影矩阵
+
+
+	core->glBindVertexArray(VAOs[0]);	// 前面已经记录了VBO和EBO现在只需一步调用即可
+	core->glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	core->glDrawArrays(GL_TRIANGLES, 0, drawable_size);
+	core->glBindVertexArray(0);
+}
+
 void MaterialBase::render()
 {
 	shader.bind();
@@ -65,16 +79,21 @@ void MaterialBase::render()
 
 void MaterialBase::clear()
 {
-	shader.bind();
-	for (GLuint VAO : VAOs) {
-		if (VAO != 0) {
-			core->glDeleteVertexArrays(1, &VAO);
+	try {
+		shader.bind();
+		for (GLuint VAO : VAOs) {
+			if (VAO != 0) {
+				core->glDeleteVertexArrays(1, &VAO);
+			}
+		}
+
+		for (GLuint VBO : VBOs) {
+			if (VBO != 0) {
+				core->glDeleteBuffers(1, &VBO);
+			}
 		}
 	}
-	
-	for (GLuint VBO : VBOs) {
-		if (VBO != 0) {
-			core->glDeleteBuffers(1, &VBO);
-		}
+	catch(std::exception& e){
+
 	}
 }

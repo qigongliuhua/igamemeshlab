@@ -7,7 +7,7 @@ uniform mat4 V = mat4(1.0);
 uniform mat4 P = mat4(1.0);
 out vec3 color;
 void main() {
-	color = vec3(1,1,1); 
+	color = c; 
 	gl_Position = P * V * M * vec4(p, 1.0);
 }
 
