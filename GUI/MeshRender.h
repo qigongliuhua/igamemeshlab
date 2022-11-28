@@ -5,16 +5,16 @@
 #include <QOpenGLWidget>
 #include <QOpenGLFunctions_3_3_Core>
 #include <QOpenGLShaderProgram>
+#include "Camera.h"
 #include <Eigen/Core>
 #include <Eigen/Geometry>
-#include "Camera.h"
+#include "SceneManger.h"
 #include "Light.h"
 #include "A_Background.h"
 #include "A_Trimesh.h"
 #include "A_WorldCoordinate.h"
 #include "MouseState.h"
 #include "Trackball.h"
-#include "SceneManger.h"
 #include <QTimer> 
 
 class MeshRender  : public QOpenGLWidget

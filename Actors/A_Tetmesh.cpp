@@ -1,8 +1,8 @@
-﻿#include "A_Trimesh.h"
+﻿#include "A_Tetmesh.h"
 #include "cinolib/io/read_write.h"
 
 
-void A_Trimesh::render()
+void A_Tetmesh::render()
 {
 	assert(core != nullptr && camera != nullptr && light != nullptr);
 
@@ -10,8 +10,9 @@ void A_Trimesh::render()
 		need_update_gl = false;
 		if (flag_show_lines) {
 			std::vector<GLfloat> verts;
-			for (unsigned int eh = 0; eh < mesh.num_edges(); ++eh) {
-				for (auto vh : mesh.adj_e2v(eh)) {
+			for (unsigned int eid = 0; eid < mesh.num_edges(); ++eid) {
+				if (!mesh.edge_is_on_srf(eid)) continue;
+				for (auto vh : mesh.adj_e2v(eid)) {
 					auto v = mesh.vert(vh);
 					auto vdata = mesh.vert_data(vh);
 					verts.push_back(v.x());
@@ -22,12 +23,14 @@ void A_Trimesh::render()
 					verts.push_back(lines_color.blueF());
 				}
 			}
+
 			material_line.set_shaders(verts);
 		}
 
 		if (flag_show_points) {
 			std::vector<GLfloat> verts;
 			for (unsigned int vid = 0; vid < mesh.num_verts(); ++vid) {
+				if (!mesh.vert_is_on_srf(vid)) continue;
 				auto v = mesh.vert(vid);
 				verts.push_back(v.x());
 				verts.push_back(v.y());
@@ -43,9 +46,11 @@ void A_Trimesh::render()
 
 		if (flag_face_normal_lines) {
 			std::vector<GLfloat> verts;
-			for (unsigned int ph = 0; ph < mesh.num_polys(); ++ph) {
-				auto center = mesh.poly_centroid(ph);
-				auto pdata = mesh.poly_data(ph);
+			for (unsigned int fid = 0; fid < mesh.num_faces(); ++fid) {
+				if (!mesh.face_is_on_srf(fid)) continue;
+
+				auto center = mesh.face_centroid(fid);
+				auto pdata = mesh.face_data(fid);
 				verts.push_back(center.x());
 				verts.push_back(center.y());
 				verts.push_back(center.z());
@@ -65,9 +70,11 @@ void A_Trimesh::render()
 
 		if (flag_vertex_normal_lines) {
 			std::vector<GLfloat> verts;
-			for (unsigned int vh = 0; vh < mesh.num_verts(); ++vh) {
-				auto center = mesh.vert(vh);
-				auto vdata = mesh.vert_data(vh);
+			for (unsigned int vid = 0; vid < mesh.num_verts(); ++vid) {
+				if (!mesh.vert_is_on_srf(vid)) continue;
+
+				auto center = mesh.vert(vid);
+				auto vdata = mesh.vert_data(vid);
 				verts.push_back(center.x());
 				verts.push_back(center.y());
 				verts.push_back(center.z());
@@ -87,19 +94,22 @@ void A_Trimesh::render()
 
 		if (flag_show_model) {
 			std::vector<GLfloat> verts;
-			for (unsigned int ph = 0; ph < mesh.num_polys(); ++ph) {
-				for (auto vh : mesh.adj_p2v(ph)) {
-					auto v = mesh.vert(vh);
-					auto vdata = mesh.vert_data(vh);
-					verts.push_back(v.x());
-					verts.push_back(v.y());
-					verts.push_back(v.z());
-					verts.push_back(vdata.normal.x());
-					verts.push_back(vdata.normal.y());
-					verts.push_back(vdata.normal.z());
-					verts.push_back(vdata.color.r);
-					verts.push_back(vdata.color.g);
-					verts.push_back(vdata.color.b);
+			for (uint fid = 0; fid < mesh.num_faces(); ++fid) {
+				uint pid_beneath;
+				if (!mesh.face_is_visible(fid, pid_beneath)) continue;
+				for (uint i = 0; i < mesh.face_tessellation(fid).size(); ++i)
+				{
+					uint vid = mesh.face_tessellation(fid).at(i);
+
+					verts.push_back(mesh.vert(vid).x());
+					verts.push_back(mesh.vert(vid).y());
+					verts.push_back(mesh.vert(vid).z());
+					verts.push_back(mesh.vert_data(vid).normal.x());
+					verts.push_back(mesh.vert_data(vid).normal.y());
+					verts.push_back(mesh.vert_data(vid).normal.z());
+					verts.push_back(mesh.vert_data(vid).color.r);
+					verts.push_back(mesh.vert_data(vid).color.g);
+					verts.push_back(mesh.vert_data(vid).color.b);
 				}
 			}
 			material.set_shaders(verts);
@@ -113,7 +123,7 @@ void A_Trimesh::render()
 	if (flag_vertex_normal_lines && flag_show_model) material_vertex_normal_lines.render(*camera);
 }
 
-void A_Trimesh::load_model(const std::string& path)
+void A_Tetmesh::load_model(const std::string& path)
 {
 	mesh.load(path.c_str());
 	mesh.normalize_bbox();
@@ -126,7 +136,7 @@ void A_Trimesh::load_model(const std::string& path)
 
 }
 
-void A_Trimesh::save_model(const std::string& path)
+void A_Tetmesh::save_model(const std::string& path)
 {
 	mesh.save(path.c_str());
 }

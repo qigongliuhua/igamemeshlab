@@ -21,6 +21,7 @@ public slots:
 	void change_background_color();
 	void change_model_line_color();
 	void change_model_point_color();
+	void reset_all_color();
 	void change_camera_fov(int value);
 	void change_camera_persp_mode(int value);
 	void reset_camera();

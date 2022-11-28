@@ -4,6 +4,8 @@
 #include <QMenu>
 #include "ui_SceneModelItem.h"
 #include "A_Trimesh.h"
+#include "A_Tetmesh.h"
+#include "A_Hexmesh.h"
 #include <functional>
 
 
@@ -21,14 +23,25 @@ public:
 	{
 		None,
 		TriMesh,
+		TetMesh,
+		HexMesh,
 	} meshtype = MeshType::None;
 
 
 	ActorModelBase* get_mesh() { return mesh; }
 	A_Trimesh* get_trimesh() { return dynamic_cast<A_Trimesh*>(mesh); }
+	A_Tetmesh* get_tetmesh() { return dynamic_cast<A_Tetmesh*>(mesh); }
+	A_Hexmesh* get_hexmesh() { return dynamic_cast<A_Hexmesh*>(mesh); }
+	void clear_mesh();
 
 	void load_trimesh(const std::string& path); //加载三角表面网格
 	void load_trimesh(A_Trimesh* trimesh); //加载三角表面网格
+
+	void load_tetmesh(const std::string& path); //加载四面体网格
+	void load_tetmesh(A_Tetmesh* tetmesh); //加载四面体网格
+
+	void load_hexmesh(const std::string& path); //加载六面体网格
+	void load_hexmesh(A_Hexmesh* hexmesh); //加载六面体网格
 
 	void set_press_listener(std::function<void(SceneModelItem*)> listener) { press_listener = listener; };
 	void set_delete_listener(std::function<void(SceneModelItem*)> listener) { delete_listener = listener; };

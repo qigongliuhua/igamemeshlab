@@ -11,6 +11,7 @@ iGameMeshLab::iGameMeshLab(QWidget *parent)
 	connect(ui.Btn_Background_color, SIGNAL(clicked()), this, SLOT(change_background_color()));
 	connect(ui.Btn_model_line_color, SIGNAL(clicked()), this, SLOT(change_model_line_color()));
 	connect(ui.Btn_model_point_color, SIGNAL(clicked()), this, SLOT(change_model_point_color()));
+	connect(ui.Btn_reset_all_color, SIGNAL(clicked()), this, SLOT(reset_all_color()));
 	connect(ui.camera_fov, SIGNAL(valueChanged(int)), this, SLOT(change_camera_fov(int)));
 	connect(ui.camera_persp_mode, SIGNAL(currentIndexChanged(int)), this, SLOT(change_camera_persp_mode(int)));
 	connect(ui.reset_camera, SIGNAL(clicked()), this, SLOT(reset_camera()));
@@ -60,6 +61,17 @@ void iGameMeshLab::change_model_point_color()
 	if (colorDlg.exec() == QColorDialog::Accepted) {
 		m_color = colorDlg.selectedColor();
 		sceneManger->last_clicked_item->get_mesh()->set_points_color(m_color);
+	}
+	ui.openGLWidget1->update();
+}
+
+void iGameMeshLab::reset_all_color()
+{
+	ui.openGLWidget1->background_color = QColor(255, 255, 255);
+	ui.openGLWidget1->need_update_shaders = true;
+	if (sceneManger->last_clicked_item->get_mesh()) {
+		sceneManger->last_clicked_item->get_mesh()->set_lines_color(QColor(0, 0, 0));
+		sceneManger->last_clicked_item->get_mesh()->set_points_color(QColor(255, 0, 0));
 	}
 	ui.openGLWidget1->update();
 }
@@ -134,9 +146,25 @@ void iGameMeshLab::MenuClicked(QAction* action)
 	}
 	else if (action == ui.open_tetmesh) //打开四面体网格
 	{
+		QString filePath = QFileDialog::getOpenFileName(this, tr("Load file"), tr(""), tr("mesh,vtu,vtk,tet(*.mesh *.vtu *.vtk *.tet *.MESH *.VTU *.VTK *.TET)"));
+		//QString filePath = QFileDialog::getOpenFileName(this, tr("Load file"), tr(""), tr("Obj Files(*.obj)"));
+		if (filePath.isEmpty())
+			return;
+
+		SceneModelItem* item = new SceneModelItem();
+		item->load_tetmesh(filePath.toStdString());
+		sceneManger->add_item(item);
 	}	
 	else if (action == ui.open_quadtimesh) //打开六面体网格
 	{
+		QString filePath = QFileDialog::getOpenFileName(this, tr("Load file"), tr(""), tr("mesh,vtu,vtk,tet(*.mesh *.vtu *.vtk *.tet *.MESH *.VTU *.VTK *.TET)"));
+		//QString filePath = QFileDialog::getOpenFileName(this, tr("Load file"), tr(""), tr("Obj Files(*.obj)"));
+		if (filePath.isEmpty())
+			return;
+
+		SceneModelItem* item = new SceneModelItem();
+		item->load_hexmesh(filePath.toStdString());
+		sceneManger->add_item(item);
 	}
 	else if (action == ui.open_polytimesh) //打开多面体网格
 	{

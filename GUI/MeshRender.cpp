@@ -145,7 +145,7 @@ void MeshRender::mouseReleaseEvent(QMouseEvent* _event)
 
 void MeshRender::wheelEvent(QWheelEvent* _event)
 {
-	double d = -_event->delta() / 120.0 * 0.1 * camera.scene_radius;
+	double d = -_event->delta() / 120.0 * 0.01 * camera.scene_radius;
 	camera.zoom(d);
 	update();
 }

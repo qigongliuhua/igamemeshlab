@@ -16,7 +16,8 @@ void SceneManger::add_item(SceneModelItem* item)
 		//int index = std::find(items.begin(), items.end(), item) - items.begin();
 		//if(index < this->count())
 		//	need_delete_items.push_back(item);
-		this->remove(item);
+		this->remove_item(item);
+		item->clear_mesh();
 	};
 	item->set_press_listener(listener);
 	item->set_delete_listener(delete_listener);
@@ -41,7 +42,7 @@ void SceneManger::remove_at(int index)
 	if (this->count() == 0) last_clicked_item = nullptr;
 }
 
-void SceneManger::remove(SceneModelItem* item)
+void SceneManger::remove_item(SceneModelItem* item)
 {
 	int index = std::find(items.begin(), items.end(), item) - items.begin();
 	remove_at(index);

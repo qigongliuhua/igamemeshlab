@@ -21,6 +21,28 @@ SceneModelItem::~SceneModelItem()
 	//mesh->~ActorModelBase(); //关闭窗口时因为opengl上下文被销毁所以释放VBO VAO会报错，暂时不会修改
 }
 
+void SceneModelItem::clear_mesh()
+{
+	switch (meshtype)
+	{
+	case SceneModelItem::None:
+		break;
+	case SceneModelItem::TriMesh:
+		get_trimesh()->~A_Trimesh();
+		break;
+	case SceneModelItem::TetMesh:
+		get_tetmesh()->~A_Tetmesh();
+		break;
+	case SceneModelItem::HexMesh:
+		get_hexmesh()->~A_Hexmesh();
+		break;
+	default:
+		break;
+	}
+	mesh = nullptr;
+	meshtype = SceneModelItem::None;
+}
+
 void SceneModelItem::load_trimesh(const std::string& path)
 {
 	A_Trimesh* trimesh = new A_Trimesh();
@@ -37,6 +59,42 @@ void SceneModelItem::load_trimesh(A_Trimesh* trimesh)
 	meshtype = MeshType::TriMesh;
 
 	ui.model_name->setText(tr(trimesh->get_filename().c_str()));
+}
+
+void SceneModelItem::load_tetmesh(const std::string& path)
+{
+	A_Tetmesh* tetmesh = new A_Tetmesh();
+	tetmesh->load_model(path.c_str());
+	mesh = dynamic_cast<ActorModelBase*>(tetmesh);
+	meshtype = MeshType::TetMesh;
+
+	ui.model_name->setText(tr(tetmesh->get_filename().c_str()));
+}
+
+void SceneModelItem::load_tetmesh(A_Tetmesh* tetmesh)
+{
+	mesh = dynamic_cast<ActorModelBase*>(tetmesh);
+	meshtype = MeshType::TetMesh;
+
+	ui.model_name->setText(tr(tetmesh->get_filename().c_str()));
+}
+
+void SceneModelItem::load_hexmesh(const std::string& path)
+{
+	A_Hexmesh* hexmesh = new A_Hexmesh();
+	hexmesh->load_model(path.c_str());
+	mesh = dynamic_cast<ActorModelBase*>(hexmesh);
+	meshtype = MeshType::HexMesh;
+
+	ui.model_name->setText(tr(hexmesh->get_filename().c_str()));
+}
+
+void SceneModelItem::load_hexmesh(A_Hexmesh* hexmesh)
+{
+	mesh = dynamic_cast<ActorModelBase*>(hexmesh);
+	meshtype = MeshType::HexMesh;
+
+	ui.model_name->setText(tr(hexmesh->get_filename().c_str()));
 }
 
 void SceneModelItem::toggle_show_model(int value)

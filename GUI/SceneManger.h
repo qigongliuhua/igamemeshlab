@@ -19,14 +19,14 @@ public:
 
 	void add_item(SceneModelItem* item);
 	void remove_at(int index);
-	void remove(SceneModelItem* item);
+	void remove_item(SceneModelItem* item);
 	int count() { return (int)items.size(); }
 
 	QVBoxLayout* list_widget = nullptr;
 	std::vector<SceneModelItem* >items; 
 	std::vector<SceneModelItem* > need_delete_items; //稍后再opengl的环境下释放
 
-	SceneModelItem* last_clicked_item = nullptr;
+	SceneModelItem* last_clicked_item = nullptr; //上一次选中的item
 private:
 };
 

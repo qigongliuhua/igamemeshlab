@@ -79,21 +79,16 @@ void MaterialBase::render()
 
 void MaterialBase::clear()
 {
-	try {
-		shader.bind();
-		for (GLuint VAO : VAOs) {
-			if (VAO != 0) {
-				core->glDeleteVertexArrays(1, &VAO);
-			}
-		}
-
-		for (GLuint VBO : VBOs) {
-			if (VBO != 0) {
-				core->glDeleteBuffers(1, &VBO);
-			}
+	shader.bind();
+	for (GLuint VAO : VAOs) {
+		if (VAO != 0) {
+			core->glDeleteVertexArrays(1, &VAO);
 		}
 	}
-	catch(std::exception& e){
 
+	for (GLuint VBO : VBOs) {
+		if (VBO != 0) {
+			core->glDeleteBuffers(1, &VBO);
+		}
 	}
 }
