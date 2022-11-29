@@ -2,13 +2,13 @@
 #include "cinolib/io/read_write.h"
 
 
-void A_Tetmesh::render()
+void A_Tetmesh::Render()
 {
 	assert(core != nullptr && camera != nullptr && light != nullptr);
 
 	if (need_update_gl) {
 		need_update_gl = false;
-		if (flag_show_lines) {
+		if (flag_show_mesh_edge) {
 			std::vector<GLfloat> verts;
 			for (unsigned int eid = 0; eid < mesh.num_edges(); ++eid) {
 				if (!mesh.edge_is_on_srf(eid)) continue;
@@ -18,16 +18,16 @@ void A_Tetmesh::render()
 					verts.push_back(v.x());
 					verts.push_back(v.y());
 					verts.push_back(v.z());
-					verts.push_back(lines_color.redF());
-					verts.push_back(lines_color.greenF());
-					verts.push_back(lines_color.blueF());
+					verts.push_back(mesh_edge_color.redF());
+					verts.push_back(mesh_edge_color.greenF());
+					verts.push_back(mesh_edge_color.blueF());
 				}
 			}
 
-			material_line.set_shaders(verts);
+			material_mesh_edge.SetShadersData(verts);
 		}
 
-		if (flag_show_points) {
+		if (flag_show_mesh_vertex) {
 			std::vector<GLfloat> verts;
 			for (unsigned int vid = 0; vid < mesh.num_verts(); ++vid) {
 				if (!mesh.vert_is_on_srf(vid)) continue;
@@ -35,16 +35,16 @@ void A_Tetmesh::render()
 				verts.push_back(v.x());
 				verts.push_back(v.y());
 				verts.push_back(v.z());
-				verts.push_back(point_color.redF());
-				verts.push_back(point_color.greenF());
-				verts.push_back(point_color.blueF());
+				verts.push_back(mesh_vertex_color.redF());
+				verts.push_back(mesh_vertex_color.greenF());
+				verts.push_back(mesh_vertex_color.blueF());
 			}
-			material_point.set_shaders(verts);
+			material_mesh_vertex.SetShadersData(verts);
 		}
 
-		if(flag_face_normal_lines || flag_face_normal_lines || flag_show_model) mesh.update_normals(); //重新生成法线
+		if(flag_show_mesh_face_normal || flag_show_mesh_vertex_normal || flag_show_mesh) mesh.update_normals(); //重新生成法线
 
-		if (flag_face_normal_lines) {
+		if (flag_show_mesh_face_normal) {
 			std::vector<GLfloat> verts;
 			for (unsigned int fid = 0; fid < mesh.num_faces(); ++fid) {
 				if (!mesh.face_is_on_srf(fid)) continue;
@@ -54,21 +54,21 @@ void A_Tetmesh::render()
 				verts.push_back(center.x());
 				verts.push_back(center.y());
 				verts.push_back(center.z());
-				verts.push_back(face_normal_lines_color.redF());
-				verts.push_back(face_normal_lines_color.greenF());
-				verts.push_back(face_normal_lines_color.blueF());
+				verts.push_back(mesh_face_normal_color.redF());
+				verts.push_back(mesh_face_normal_color.greenF());
+				verts.push_back(mesh_face_normal_color.blueF());
 
-				verts.push_back(center.x() + pdata.normal.x() * normal_lines_length);
-				verts.push_back(center.y() + pdata.normal.y() * normal_lines_length);
-				verts.push_back(center.z() + pdata.normal.z() * normal_lines_length);
-				verts.push_back(face_normal_lines_color.redF());
-				verts.push_back(face_normal_lines_color.greenF());
-				verts.push_back(face_normal_lines_color.blueF());
+				verts.push_back(center.x() + pdata.normal.x() * normal_dislay_length_zoom);
+				verts.push_back(center.y() + pdata.normal.y() * normal_dislay_length_zoom);
+				verts.push_back(center.z() + pdata.normal.z() * normal_dislay_length_zoom);
+				verts.push_back(mesh_face_normal_color.redF());
+				verts.push_back(mesh_face_normal_color.greenF());
+				verts.push_back(mesh_face_normal_color.blueF());
 			}
-			material_face_normal_lines.set_shaders(verts);
+			material_mesh_face_normal.SetShadersData(verts);
 		}
 
-		if (flag_vertex_normal_lines) {
+		if (flag_show_mesh_vertex_normal) {
 			std::vector<GLfloat> verts;
 			for (unsigned int vid = 0; vid < mesh.num_verts(); ++vid) {
 				if (!mesh.vert_is_on_srf(vid)) continue;
@@ -78,21 +78,21 @@ void A_Tetmesh::render()
 				verts.push_back(center.x());
 				verts.push_back(center.y());
 				verts.push_back(center.z());
-				verts.push_back(vertex_normal_lines_color.redF());
-				verts.push_back(vertex_normal_lines_color.greenF());
-				verts.push_back(vertex_normal_lines_color.blueF());
+				verts.push_back(mesh_vertex_normal_color.redF());
+				verts.push_back(mesh_vertex_normal_color.greenF());
+				verts.push_back(mesh_vertex_normal_color.blueF());
 
-				verts.push_back(center.x() + vdata.normal.x() * normal_lines_length);
-				verts.push_back(center.y() + vdata.normal.y() * normal_lines_length);
-				verts.push_back(center.z() + vdata.normal.z() * normal_lines_length);
-				verts.push_back(vertex_normal_lines_color.redF());
-				verts.push_back(vertex_normal_lines_color.greenF());
-				verts.push_back(vertex_normal_lines_color.blueF());
+				verts.push_back(center.x() + vdata.normal.x() * normal_dislay_length_zoom);
+				verts.push_back(center.y() + vdata.normal.y() * normal_dislay_length_zoom);
+				verts.push_back(center.z() + vdata.normal.z() * normal_dislay_length_zoom);
+				verts.push_back(mesh_vertex_normal_color.redF());
+				verts.push_back(mesh_vertex_normal_color.greenF());
+				verts.push_back(mesh_vertex_normal_color.blueF());
 			}
-			material_vertex_normal_lines.set_shaders(verts);
+			material_face_vertex_normal.SetShadersData(verts);
 		}
 
-		if (flag_show_model) {
+		if (flag_show_mesh) {
 			std::vector<GLfloat> verts;
 			for (uint fid = 0; fid < mesh.num_faces(); ++fid) {
 				uint pid_beneath;
@@ -112,18 +112,18 @@ void A_Tetmesh::render()
 					verts.push_back(mesh.vert_data(vid).color.b);
 				}
 			}
-			material.set_shaders(verts);
+			material_mesh.SetShadersData(verts);
 		}
 	}
 
-	if (flag_show_model) material.render(*camera, *light);
-	if (flag_show_lines && flag_show_model) material_line.render(*camera);
-	if (flag_show_points && flag_show_model) material_point.render(*camera);
-	if (flag_face_normal_lines && flag_show_model) material_face_normal_lines.render(*camera);
-	if (flag_vertex_normal_lines && flag_show_model) material_vertex_normal_lines.render(*camera);
+	if (flag_show_mesh) material_mesh.Render(*camera, *light);
+	if (flag_show_mesh_edge && flag_show_mesh) material_mesh_edge.Render(*camera);
+	if (flag_show_mesh_vertex && flag_show_mesh) material_mesh_vertex.Render(*camera);
+	if (flag_show_mesh_vertex && flag_show_mesh) material_mesh_face_normal.Render(*camera);
+	if (flag_show_mesh_vertex_normal && flag_show_mesh) material_face_vertex_normal.Render(*camera);
 }
 
-void A_Tetmesh::load_model(const std::string& path)
+void A_Tetmesh::LoadMesh(const std::string& path)
 {
 	mesh.load(path.c_str());
 	mesh.normalize_bbox();
@@ -136,7 +136,7 @@ void A_Tetmesh::load_model(const std::string& path)
 
 }
 
-void A_Tetmesh::save_model(const std::string& path)
+void A_Tetmesh::SaveMesh(const std::string& path)
 {
 	mesh.save(path.c_str());
 }

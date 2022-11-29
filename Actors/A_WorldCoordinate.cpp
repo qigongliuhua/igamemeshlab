@@ -1,11 +1,11 @@
 ﻿#include "A_WorldCoordinate.h"
 
-void A_WorldCoordinate::init(QOpenGLFunctions_3_3_Core* core_)
+void A_WorldCoordinate::Init(QOpenGLFunctions_3_3_Core* core_)
 {
 	core = core_;
-	material.set_opengl(core);
-	material.load_shaders();
-	material.width = 1.0; //线段宽度
+	material_mesh.SetOpenglCore(core);
+	material_mesh.LoadShaders();
+	material_mesh.width = 1.0; //线段宽度
 
 	// 画平行x
 	int limitx = abs(verts[0]);
@@ -41,15 +41,15 @@ void A_WorldCoordinate::init(QOpenGLFunctions_3_3_Core* core_)
 		verts.push_back(othercolor.blueF());
 	}
 
-	material.set_shaders(verts);
+	material_mesh.SetShadersData(verts);
 }
 
-void A_WorldCoordinate::render()
+void A_WorldCoordinate::Render()
 {
 	if (flag_show)
 	{
 		QMatrix4x4 M;
-		material.render(camera->model, camera->view, camera->projection);
+		material_mesh.Render(camera->model, camera->view, camera->projection);
 	}
 }
 

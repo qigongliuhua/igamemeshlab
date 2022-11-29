@@ -2,18 +2,18 @@
 #include "ShaderUtils.h"
 #include <iostream>
 
-void M_BlinnPhong::load_shaders()
+void M_BlinnPhong::LoadShaders()
 {
 	ShaderUtils::LoadShaderFileFromQrc(":/shaders/shaders/blinnphong.shader", shader);
 	shader.bind();
 }
 
-void M_BlinnPhong::set_shaders(const std::vector<GLfloat>& verts)
+void M_BlinnPhong::SetShadersData(const std::vector<GLfloat>& verts)
 {
 	assert(verts.size() % 9 == 0);
 
 	shader.bind();
-	clear();
+	ClearShadersData();
 
 	// 1.新建顶点数组对象
 	core->glGenVertexArrays(1, &VAOs[0]);
@@ -40,13 +40,13 @@ void M_BlinnPhong::set_shaders(const std::vector<GLfloat>& verts)
 
 }
 
-void M_BlinnPhong::set_shaders(const std::vector<GLfloat>& pos, const std::vector<GLfloat>& colors)
+void M_BlinnPhong::SetShadersData(const std::vector<GLfloat>& pos, const std::vector<GLfloat>& colors)
 {
 	assert(pos.size() == colors.size());
 	assert(pos.size() % 3 == 0);
 
 	shader.bind();
-	clear();
+	ClearShadersData();
 
 	VBOs.resize(2, 0);
 	// 1.新建顶点数组对象
@@ -72,7 +72,7 @@ void M_BlinnPhong::set_shaders(const std::vector<GLfloat>& pos, const std::vecto
 	drawable_size = (GLuint)pos.size() / 3; //绘制单元数量
 }
 
-void M_BlinnPhong::set_shaders(const std::vector<GLfloat>& pos, GLfloat r, GLfloat g, GLfloat b)
+void M_BlinnPhong::SetShadersData(const std::vector<GLfloat>& pos, GLfloat r, GLfloat g, GLfloat b)
 {
 	assert(pos.size() % 3 == 0);
 
@@ -86,10 +86,10 @@ void M_BlinnPhong::set_shaders(const std::vector<GLfloat>& pos, GLfloat r, GLflo
 		colors[3 * i + 2] = b;
 	}
 
-	set_shaders(pos, colors);
+	SetShadersData(pos, colors);
 }
 
-void M_BlinnPhong::render(Camera& camera, Light& light)
+void M_BlinnPhong::Render(Camera& camera, Light& light)
 {
 	shader.bind();
 
@@ -97,5 +97,5 @@ void M_BlinnPhong::render(Camera& camera, Light& light)
 	shader.setUniformValue("lightPos", light.light_pos);
 	shader.setUniformValue("lightColor", light.light_color);
 
-	MaterialBase::render(camera);
+	MaterialBase::Render(camera);
 }

@@ -20,9 +20,9 @@ public:
 		Press_Left_Mid_Right_Buttom,
 	} status = MouseStatus::No_Press;
 
-	void press(Qt::MouseButton mb);
-	void release(Qt::MouseButton mb);
-	void print();
+	void PressEvent(Qt::MouseButton mb);
+	void ReleaseEvent(Qt::MouseButton mb);
+	void Print();
 
 private:
 	Qt::MouseButton last = Qt::MouseButton::NoButton;

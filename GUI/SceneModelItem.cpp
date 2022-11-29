@@ -9,11 +9,11 @@ SceneModelItem::SceneModelItem(QWidget *parent)
 	ui.setupUi(this);
 	CreateMenu();
 	
-	connect(ui.flag_show_model, SIGNAL(stateChanged(int)), this, SLOT(toggle_show_model(int)));
-	connect(ui.flag_show_model_lines, SIGNAL(stateChanged(int)), this, SLOT(toggle_show_model_line(int)));
-	connect(ui.flag_show_model_vertex, SIGNAL(stateChanged(int)), this, SLOT(toggle_show_model_vertex(int)));
-	connect(ui.flag_show_face_normal, SIGNAL(stateChanged(int)), this, SLOT(toggle_show_face_normal(int)));
-	connect(ui.flag_show_vertex_normal, SIGNAL(stateChanged(int)), this, SLOT(toggle_show_vertex_normal(int)));
+	connect(ui.flag_show_mesh, SIGNAL(stateChanged(int)), this, SLOT(toggle_show_model(int)));
+	connect(ui.flag_show_mesh_edge, SIGNAL(stateChanged(int)), this, SLOT(toggle_show_model_line(int)));
+	connect(ui.flag_show_mesh_vertex, SIGNAL(stateChanged(int)), this, SLOT(toggle_show_model_vertex(int)));
+	connect(ui.flag_show_mesh_face_normal, SIGNAL(stateChanged(int)), this, SLOT(toggle_show_face_normal(int)));
+	connect(ui.flag_show_mesh_vertex_normal, SIGNAL(stateChanged(int)), this, SLOT(toggle_show_vertex_normal(int)));
 }
 
 SceneModelItem::~SceneModelItem()
@@ -21,29 +21,29 @@ SceneModelItem::~SceneModelItem()
 	//mesh->~ActorModelBase(); //关闭窗口时因为opengl上下文被销毁所以释放VBO VAO会报错，暂时不会修改
 }
 
-void SceneModelItem::clear_mesh()
+void SceneModelItem::ClearMesh()
 {
 	switch (meshtype)
 	{
 	case SceneModelItem::None:
 		break;
-	case SceneModelItem::TriMesh:
-		get_trimesh()->~A_Trimesh();
+	case SceneModelItem::Trimesh:
+		GetTrimesh()->~A_Trimesh();
 		break;
-	case SceneModelItem::QuadMesh:
-		get_quadmesh()->~A_Quadmesh();
+	case SceneModelItem::Quadmesh:
+		GetQuadmesh()->~A_Quadmesh();
 		break;
-	case SceneModelItem::PolygonMesh:
-		get_polygonmesh()->~A_Polygonmesh();
+	case SceneModelItem::Polygonmesh:
+		GetPolygonmesh()->~A_Polygonmesh();
 		break;
-	case SceneModelItem::TetMesh:
-		get_tetmesh()->~A_Tetmesh();
+	case SceneModelItem::Tetmesh:
+		GetTetmesh()->~A_Tetmesh();
 		break;
-	case SceneModelItem::HexMesh:
-		get_hexmesh()->~A_Hexmesh();
+	case SceneModelItem::Hexmesh:
+		GetHexmesh()->~A_Hexmesh();
 		break;
-	case SceneModelItem::PolyhedralMesh:
-		get_polyhedralmesh()->~A_Polyhedralmesh();
+	case SceneModelItem::Polyhedralmesh:
+		GetPolyhedralmesh()->~A_Polyhedralmesh();
 		break;
 	default:
 		break;
@@ -52,129 +52,129 @@ void SceneModelItem::clear_mesh()
 	meshtype = SceneModelItem::None;
 }
 
-void SceneModelItem::load_trimesh(const std::string& path)
+void SceneModelItem::LoadTrimesh(const std::string& path)
 {
 	A_Trimesh* trimesh = new A_Trimesh();
-	trimesh->load_model(path.c_str());
-	load_trimesh(trimesh);
+	trimesh->LoadMesh(path.c_str());
+	LoadTrimesh(trimesh);
 }
 
-void SceneModelItem::load_trimesh(A_Trimesh* trimesh)
+void SceneModelItem::LoadTrimesh(A_Trimesh* trimesh)
 {
 	mesh = dynamic_cast<ActorModelBase*>(trimesh);
-	meshtype = MeshType::TriMesh;
+	meshtype = MeshType::Trimesh;
 
-	ui.model_name->setText(tr(trimesh->get_filename().c_str()));
+	ui.model_name->setText(tr(trimesh->GetMeshFileName().c_str()));
 }
 
-void SceneModelItem::load_quadmesh(const std::string& path)
+void SceneModelItem::LoadQuadmesh(const std::string& path)
 {
 	A_Quadmesh* quadmesh = new A_Quadmesh();
-	quadmesh->load_model(path.c_str());
-	load_quadmesh(quadmesh);
+	quadmesh->LoadMesh(path.c_str());
+	LoadQuadmesh(quadmesh);
 }
 
-void SceneModelItem::load_quadmesh(A_Quadmesh* quadmesh)
+void SceneModelItem::LoadQuadmesh(A_Quadmesh* quadmesh)
 {
 	mesh = dynamic_cast<ActorModelBase*>(quadmesh);
-	meshtype = MeshType::QuadMesh;
+	meshtype = MeshType::Quadmesh;
 
-	ui.model_name->setText(tr(quadmesh->get_filename().c_str()));
+	ui.model_name->setText(tr(quadmesh->GetMeshFileName().c_str()));
 }
 
-void SceneModelItem::load_polygonmesh(const std::string& path)
+void SceneModelItem::LoadPolygonmesh(const std::string& path)
 {
 	A_Polygonmesh* polygonmesh = new A_Polygonmesh();
-	polygonmesh->load_model(path.c_str());
-	load_polygonmesh(polygonmesh);
+	polygonmesh->LoadMesh(path.c_str());
+	LoadPolygonmesh(polygonmesh);
 }
 
-void SceneModelItem::load_polygonmesh(A_Polygonmesh* polygonmesh)
+void SceneModelItem::LoadPolygonmesh(A_Polygonmesh* polygonmesh)
 {
 	mesh = dynamic_cast<ActorModelBase*>(polygonmesh);
-	meshtype = MeshType::PolygonMesh;
+	meshtype = MeshType::Polygonmesh;
 
-	ui.model_name->setText(tr(polygonmesh->get_filename().c_str()));
+	ui.model_name->setText(tr(polygonmesh->GetMeshFileName().c_str()));
 }
 
-void SceneModelItem::load_tetmesh(const std::string& path)
+void SceneModelItem::LoadTetmesh(const std::string& path)
 {
 	A_Tetmesh* tetmesh = new A_Tetmesh();
-	tetmesh->load_model(path.c_str());
-	load_tetmesh(tetmesh);
+	tetmesh->LoadMesh(path.c_str());
+	LoadTetmesh(tetmesh);
 }
 
-void SceneModelItem::load_tetmesh(A_Tetmesh* tetmesh)
+void SceneModelItem::LoadTetmesh(A_Tetmesh* tetmesh)
 {
 	mesh = dynamic_cast<ActorModelBase*>(tetmesh);
-	meshtype = MeshType::TetMesh;
+	meshtype = MeshType::Tetmesh;
 
-	ui.model_name->setText(tr(tetmesh->get_filename().c_str()));
+	ui.model_name->setText(tr(tetmesh->GetMeshFileName().c_str()));
 }
 
-void SceneModelItem::load_hexmesh(const std::string& path)
+void SceneModelItem::LoadHexmesh(const std::string& path)
 {
 	A_Hexmesh* hexmesh = new A_Hexmesh();
-	hexmesh->load_model(path.c_str());
-	load_hexmesh(hexmesh);
+	hexmesh->LoadMesh(path.c_str());
+	LoadHexmesh(hexmesh);
 }
 
-void SceneModelItem::load_hexmesh(A_Hexmesh* hexmesh)
+void SceneModelItem::LoadHexmesh(A_Hexmesh* hexmesh)
 {
 	mesh = dynamic_cast<ActorModelBase*>(hexmesh);
-	meshtype = MeshType::HexMesh;
+	meshtype = MeshType::Hexmesh;
 
-	ui.model_name->setText(tr(hexmesh->get_filename().c_str()));
+	ui.model_name->setText(tr(hexmesh->GetMeshFileName().c_str()));
 }
 
-void SceneModelItem::load_polyhedralmesh(const std::string& path)
+void SceneModelItem::LoadPolyhedralmesh(const std::string& path)
 {
 	A_Polyhedralmesh* polyhedralmesh = new A_Polyhedralmesh();
-	polyhedralmesh->load_model(path.c_str());
-	load_polyhedralmesh(polyhedralmesh);
+	polyhedralmesh->LoadMesh(path.c_str());
+	LoadPolyhedralmesh(polyhedralmesh);
 }
 
-void SceneModelItem::load_polyhedralmesh(A_Polyhedralmesh* polyhedralmesh)
+void SceneModelItem::LoadPolyhedralmesh(A_Polyhedralmesh* polyhedralmesh)
 {
 	mesh = dynamic_cast<ActorModelBase*>(polyhedralmesh);
-	meshtype = MeshType::PolyhedralMesh;
+	meshtype = MeshType::Polyhedralmesh;
 
-	ui.model_name->setText(tr(polyhedralmesh->get_filename().c_str()));
+	ui.model_name->setText(tr(polyhedralmesh->GetMeshFileName().c_str()));
 }
 
 void SceneModelItem::toggle_show_model(int value)
 {
 	assert(mesh != nullptr);
-	if (value) mesh->show_model();
-	else mesh->hide_model();
+	if (value) mesh->ShowMesh();
+	else mesh->HideMesh();
 }
 
 void SceneModelItem::toggle_show_model_line(int value)
 {
 	assert(mesh != nullptr);
-	if (value) mesh->show_lines();
-	else mesh->hide_lines();
+	if (value) mesh->ShowMeshEdge();
+	else mesh->HideMeshEdge();
 }
 
 void SceneModelItem::toggle_show_model_vertex(int value)
 {
 	assert(mesh != nullptr);
-	if (value) mesh->show_model_points();
-	else mesh->hide_model_points();
+	if (value) mesh->ShowMeshVertex();
+	else mesh->HideMeshVertex();
 }
 
 void SceneModelItem::toggle_show_face_normal(int value)
 {
 	assert(mesh != nullptr);
-	if (value) mesh->show_face_normal_lines();
-	else mesh->hide_face_normal_lines();
+	if (value) mesh->ShowMeshFaceNormal();
+	else mesh->HideMeshFaceNormal();
 }
 
 void SceneModelItem::toggle_show_vertex_normal(int value)
 {
 	assert(mesh != nullptr);
-	if (value) mesh->show_vertex_normal_lines();
-	else mesh->hide_vertex_normal_lines();
+	if (value) mesh->ShowMeshVertexNormal();
+	else mesh->HideMeshVertexNormal();
 }
 
 void SceneModelItem::mousePressEvent(QMouseEvent* event)
@@ -184,7 +184,9 @@ void SceneModelItem::mousePressEvent(QMouseEvent* event)
 		m_pMenuRD->exec(QCursor::pos());
 	}
 
-	press_listener(this);
+	for (auto listener : press_listener) {
+		listener(this);
+	}
 }
 
 void SceneModelItem::mouseMoveEvent(QMouseEvent* event)
@@ -248,7 +250,9 @@ void SceneModelItem::SlotMenuClicked(QAction* action)
 	}
 	else if (action == m_pActionDelete)
 	{
-		delete_listener(this);
+		for (auto listener : delete_listener) {
+			listener(this);
+		}
 	}
 	else if (action == m_pActionTest1)
 	{

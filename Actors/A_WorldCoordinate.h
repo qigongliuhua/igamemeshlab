@@ -11,19 +11,19 @@ public:
 	A_WorldCoordinate() {};
 	~A_WorldCoordinate() {}
 
-	void init(QOpenGLFunctions_3_3_Core* core_) override;
-	void render() override;
+	void Init(QOpenGLFunctions_3_3_Core* core_) override;
+	void Render() override;
 
-	void set_camera(Camera* camera_) { camera = camera_; }
+	void SetCamera(Camera* camera_) { camera = camera_; }
 
-	void toggle_show() { flag_show = !flag_show; }
-	void show() { flag_show = true; }
-	void hide() { flag_show = false; }
+	void ToggleVisibility() { flag_show = !flag_show; }
+	void Show() { flag_show = true; }
+	void Hide() { flag_show = false; }
 
 private:
 	bool flag_show = false;
 
-	M_Lines material;
+	M_Lines material_mesh;
 	Camera* camera = nullptr;
 
 	QColor xcolor = { 255,0,0 };

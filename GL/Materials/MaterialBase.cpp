@@ -2,13 +2,13 @@
 
 MaterialBase::~MaterialBase()
 {
-	clear();
+	ClearShadersData();
 }
 
-void MaterialBase::set_shaders(std::vector<GLfloat>& verts, int vertex_size, std::vector<int> offset_in_one_vertex)
+void MaterialBase::SetShadersData(std::vector<GLfloat>& verts, int vertex_size, std::vector<int> offset_in_one_vertex)
 {
 	shader.bind();
-	clear();
+	ClearShadersData();
 	// 1.新建顶点数组对象
 	core->glGenVertexArrays(1, &VAOs[0]);
 	core->glGenBuffers(1, &VBOs[0]);
@@ -31,7 +31,7 @@ void MaterialBase::set_shaders(std::vector<GLfloat>& verts, int vertex_size, std
 	drawable_size = (GLuint)verts.size() / vertex_size; //绘制单元数量
 }
 
-void MaterialBase::render(Camera& camera)
+void MaterialBase::Render(Camera& camera)
 {
 	shader.bind();
 	shader.setUniformValue("viewPos", -camera.scene_center);	// 相机世界坐标
@@ -47,7 +47,7 @@ void MaterialBase::render(Camera& camera)
 	core->glBindVertexArray(0);
 }
 
-void MaterialBase::render(QMatrix4x4& M, QMatrix4x4& V, QMatrix4x4& P)
+void MaterialBase::Render(QMatrix4x4& M, QMatrix4x4& V, QMatrix4x4& P)
 {
 	shader.bind();
 	QMatrix4x4 ind;
@@ -62,7 +62,7 @@ void MaterialBase::render(QMatrix4x4& M, QMatrix4x4& V, QMatrix4x4& P)
 	core->glBindVertexArray(0);
 }
 
-void MaterialBase::render()
+void MaterialBase::Render()
 {
 	shader.bind();
 	QMatrix4x4 ind;
@@ -77,7 +77,7 @@ void MaterialBase::render()
 	core->glBindVertexArray(0);
 }
 
-void MaterialBase::clear()
+void MaterialBase::ClearShadersData()
 {
 	shader.bind();
 	for (GLuint VAO : VAOs) {

@@ -2,17 +2,17 @@
 #include "ShaderUtils.h"
 #include <iostream>
 
-void M_Lines::load_shaders()
+void M_Lines::LoadShaders()
 {
 	ShaderUtils::LoadShaderFileFromQrc(":/shaders/shaders/flat.shader", shader);
 	shader.bind();
 }
 
-void M_Lines::set_shaders(const std::vector<GLfloat>& verts_and_colors)
+void M_Lines::SetShadersData(const std::vector<GLfloat>& verts_and_colors)
 {
 	assert(verts_and_colors.size() % 6 == 0);
 	shader.bind();
-	clear();
+	ClearShadersData();
 
 
 	// 1.新建顶点数组对象
@@ -36,13 +36,13 @@ void M_Lines::set_shaders(const std::vector<GLfloat>& verts_and_colors)
 	drawable_size = (GLuint)verts_and_colors.size() / 6; //绘制单元数量
 }
 
-void M_Lines::set_shaders(const std::vector<GLfloat>& pos, const std::vector<GLfloat>& colors)
+void M_Lines::SetShadersData(const std::vector<GLfloat>& pos, const std::vector<GLfloat>& colors)
 {
 	assert(pos.size() == colors.size());
 	assert(pos.size() % 3 == 0);
 
 	shader.bind();
-	clear();
+	ClearShadersData();
 
 	VBOs.resize(2, 0);
 	// 1.新建顶点数组对象
@@ -68,7 +68,7 @@ void M_Lines::set_shaders(const std::vector<GLfloat>& pos, const std::vector<GLf
 	drawable_size = (GLuint)pos.size() / 3; //绘制单元数量
 }
 
-void M_Lines::set_shaders(const std::vector<GLfloat>& pos, GLfloat r, GLfloat g, GLfloat b)
+void M_Lines::SetShadersData(const std::vector<GLfloat>& pos, GLfloat r, GLfloat g, GLfloat b)
 {
 	assert(pos.size() % 3 == 0);
 
@@ -80,10 +80,10 @@ void M_Lines::set_shaders(const std::vector<GLfloat>& pos, GLfloat r, GLfloat g,
 		colors[3 * i + 2] = b;
 	}
 
-	set_shaders(pos, colors);
+	SetShadersData(pos, colors);
 }
 
-void M_Lines::render(Camera& camera)
+void M_Lines::Render(Camera& camera)
 {
 	shader.bind();
 
@@ -101,7 +101,7 @@ void M_Lines::render(Camera& camera)
 	core->glBindVertexArray(0);
 }
 
-void M_Lines::render(QMatrix4x4& M, QMatrix4x4& V, QMatrix4x4& P)
+void M_Lines::Render(QMatrix4x4& M, QMatrix4x4& V, QMatrix4x4& P)
 {
 	shader.bind();
 

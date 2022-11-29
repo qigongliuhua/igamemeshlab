@@ -31,7 +31,7 @@ void MeshRender::Init(void)
 	light.light_pos = QVector3D(0, 0, 4 * camera.scene_radius);
 	light.light_color = { 1,1,1 };
 
-	world_coor.set_camera(&camera);
+	world_coor.SetCamera(&camera);
 
 	updategl_timer = new QTimer(this);
 	connect(updategl_timer, &QTimer::timeout, this, [&]() {
@@ -63,8 +63,8 @@ void MeshRender::initializeGL()
 	core->glEnable(GL_LINE_SMOOTH);
 	core->glHint(GL_LINE_SMOOTH_HINT, GL_DONT_CARE);
 
-	background.init(core);
-	world_coor.init(core);
+	background.Init(core);
+	world_coor.Init(core);
 }
 
 void MeshRender::paintGL()
@@ -72,19 +72,19 @@ void MeshRender::paintGL()
 	core->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	if (need_update_shaders) {
 		need_update_shaders = false;
-		background.set_color(background_color.redF(), background_color.greenF(), background_color.blueF());
+		background.SetBackgroudColor(background_color.redF(), background_color.greenF(), background_color.blueF());
 	}
 	DrawScene();
 }
 
 void MeshRender::DrawScene()
 {
-	background.render();
+	background.Render();
 	for (auto item : sceneManger->items) {
-		if (!item->get_mesh()->is_ready()) item->get_mesh()->init(core, &camera, &light);
-		item->get_mesh()->render();
+		if (!item->GetMesh()->IsRenderReady()) item->GetMesh()->Init(core, &camera, &light);
+		item->GetMesh()->Render();
 	}
-	world_coor.render();
+	world_coor.Render();
 
 	//释放需要删除的
 	for (auto item : sceneManger->need_delete_items) {
@@ -97,7 +97,7 @@ void MeshRender::DrawScene()
 
 void MeshRender::mousePressEvent(QMouseEvent* _event)
 {
-	mouse_state.press(_event->button());
+	mouse_state.PressEvent(_event->button());
 	update();
 }
 
@@ -107,10 +107,10 @@ void MeshRender::mouseMoveEvent(QMouseEvent* _event)
 	if (mouse_state.status == MouseState::MouseStatus::Only_Press_Left_Buttom) { //旋转模型
 		QVector2D pos2d(_event->pos().x(), _event->pos().y());
 		QVector3D axis; double angle; bool valid;
-		trackball.trackball_to_rotations(pos2d, axis, angle, valid);
+		trackball.TrackballToRotations(pos2d, axis, angle, valid);
 		if (valid) camera.rotate(angle, axis);
 
-		world_coor.show();
+		world_coor.Show();
 	}
 	else if (mouse_state.status == MouseState::MouseStatus::Only_Press_Right_Buttom) { //平移模型
 		QVector2D pos2d(_event->pos().x(), _event->pos().y());
@@ -122,7 +122,7 @@ void MeshRender::mouseMoveEvent(QMouseEvent* _event)
 		}
 		last_clicked_2d_for_translate = pos2d;
 
-		world_coor.show();
+		world_coor.Show();
 	}
 
 	update();
@@ -130,14 +130,14 @@ void MeshRender::mouseMoveEvent(QMouseEvent* _event)
 
 void MeshRender::mouseReleaseEvent(QMouseEvent* _event)
 {
-	mouse_state.release(_event->button());
+	mouse_state.ReleaseEvent(_event->button());
 
 	if (mouse_state.status != MouseState::MouseStatus::Only_Press_Left_Buttom) {
-		trackball.reset_trace(); //停止旋转模型
+		trackball.ResetTrace(); //停止旋转模型
 	}
 	if (mouse_state.status != MouseState::MouseStatus::Only_Press_Left_Buttom && 
 		mouse_state.status != MouseState::MouseStatus::Only_Press_Right_Buttom) {
-		world_coor.hide();
+		world_coor.Hide();
 	}
 
 	update();

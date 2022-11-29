@@ -2,7 +2,7 @@
 #include "MouseState.h"
 #include <iostream>
 
-void MouseState::press(Qt::MouseButton mb)
+void MouseState::PressEvent(Qt::MouseButton mb)
 {
 	switch (mb)
 	{
@@ -95,7 +95,7 @@ void MouseState::press(Qt::MouseButton mb)
 	}
 }
 
-void MouseState::release(Qt::MouseButton mb)
+void MouseState::ReleaseEvent(Qt::MouseButton mb)
 {
 	switch (mb)
 	{
@@ -189,7 +189,7 @@ void MouseState::release(Qt::MouseButton mb)
 }
 
 
-void MouseState::print()
+void MouseState::Print()
 {
 	switch (status)
 	{

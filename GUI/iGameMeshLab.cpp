@@ -28,10 +28,10 @@ iGameMeshLab::iGameMeshLab(QWidget *parent)
 
 	ui.openGLWidget1->sceneManger = new SceneManger(ui.sceneList);
 	sceneManger = ui.openGLWidget1->sceneManger;
-	sceneManger->set_list_widget(ui.sceneList);
+	sceneManger->SetContainer(ui.sceneList);
 
 	std::function<void(SceneModelItem*)> change_focus_listener = [&](SceneModelItem* item) {
-		if (item == nullptr || item->get_mesh() == nullptr) {
+		if (item == nullptr || item->GetMesh() == nullptr) {
 			ui.slice_x_inverse->setChecked(false);
 			ui.slice_y_inverse->setChecked(false);
 			ui.slice_z_inverse->setChecked(false);
@@ -42,7 +42,7 @@ iGameMeshLab::iGameMeshLab(QWidget *parent)
 		else {
 			double xr, yr, zr;
 			bool xi, yi, zi;
-			item->get_mesh()->get_slice_status(xr, yr, zr, xi, yi, zi);
+			item->GetMesh()->GetCurSliceStatus(xr, yr, zr, xi, yi, zi);
 			ui.slice_x_inverse->setChecked(xi);
 			ui.slice_y_inverse->setChecked(yi);
 			ui.slice_z_inverse->setChecked(zi);
@@ -53,7 +53,7 @@ iGameMeshLab::iGameMeshLab(QWidget *parent)
 		
 	};
 
-	sceneManger->set_change_focus_item_listener(change_focus_listener);
+	sceneManger->AddChangeFocusListener(change_focus_listener);
 
 	connect(ui.menuBar, SIGNAL(triggered(QAction*)), this, SLOT(MenuClicked(QAction*)));
 }
@@ -65,7 +65,7 @@ iGameMeshLab::~iGameMeshLab()
 
 void iGameMeshLab::change_model_line_color()
 {
-	if (sceneManger->last_clicked_item->get_mesh() == nullptr) return;
+	if (sceneManger->last_clicked_item->GetMesh() == nullptr) return;
 	QColor m_color;
 
 	QColor defaultColor(255, 255, 255, 255);
@@ -75,14 +75,14 @@ void iGameMeshLab::change_model_line_color()
 	colorDlg.setCurrentColor(defaultColor);
 	if (colorDlg.exec() == QColorDialog::Accepted) {
 		m_color = colorDlg.selectedColor();
-		sceneManger->last_clicked_item->get_mesh()->set_lines_color(m_color);
+		sceneManger->last_clicked_item->GetMesh()->SetMeshEdgeDisplayColor(m_color);
 	}
 	ui.openGLWidget1->update();
 }
 
 void iGameMeshLab::change_model_point_color()
 {
-	if (sceneManger->last_clicked_item->get_mesh() == nullptr) return;
+	if (sceneManger->last_clicked_item->GetMesh() == nullptr) return;
 	QColor m_color;
 
 	QColor defaultColor(255, 255, 255, 255);
@@ -92,7 +92,7 @@ void iGameMeshLab::change_model_point_color()
 	colorDlg.setCurrentColor(defaultColor);
 	if (colorDlg.exec() == QColorDialog::Accepted) {
 		m_color = colorDlg.selectedColor();
-		sceneManger->last_clicked_item->get_mesh()->set_points_color(m_color);
+		sceneManger->last_clicked_item->GetMesh()->SetMeshVertexDisplayColor(m_color);
 	}
 	ui.openGLWidget1->update();
 }
@@ -101,9 +101,9 @@ void iGameMeshLab::reset_all_color()
 {
 	ui.openGLWidget1->background_color = QColor(255, 255, 255);
 	ui.openGLWidget1->need_update_shaders = true;
-	if (sceneManger->last_clicked_item->get_mesh()) {
-		sceneManger->last_clicked_item->get_mesh()->set_lines_color(QColor(0, 0, 0));
-		sceneManger->last_clicked_item->get_mesh()->set_points_color(QColor(255, 0, 0));
+	if (sceneManger->last_clicked_item->GetMesh()) {
+		sceneManger->last_clicked_item->GetMesh()->SetMeshEdgeDisplayColor(QColor(0, 0, 0));
+		sceneManger->last_clicked_item->GetMesh()->SetMeshVertexDisplayColor(QColor(255, 0, 0));
 	}
 	ui.openGLWidget1->update();
 }
@@ -134,15 +134,15 @@ void iGameMeshLab::reset_camera()
 
 void iGameMeshLab::set_normalmode_flat()
 {
-	if (sceneManger->last_clicked_item->get_mesh() == nullptr) return;
-	sceneManger->last_clicked_item->get_mesh()->set_normal_mode(Normal_Mode::Flat);
+	if (sceneManger->last_clicked_item->GetMesh() == nullptr) return;
+	sceneManger->last_clicked_item->GetMesh()->SetNormalMode(Normal_Mode::Flat);
 	ui.openGLWidget1->update();
 }
 
 void iGameMeshLab::set_normalmode_smooth()
 {
-	if (sceneManger->last_clicked_item->get_mesh() == nullptr) return;
-	sceneManger->last_clicked_item->get_mesh()->set_normal_mode(Normal_Mode::Smooth);
+	if (sceneManger->last_clicked_item->GetMesh() == nullptr) return;
+	sceneManger->last_clicked_item->GetMesh()->SetNormalMode(Normal_Mode::Smooth);
 
 	ui.openGLWidget1->update();
 }
@@ -150,44 +150,44 @@ void iGameMeshLab::set_normalmode_smooth()
 
 void iGameMeshLab::toggle_world_coor()
 {
-	ui.openGLWidget1->world_coor.toggle_show();
+	ui.openGLWidget1->world_coor.ToggleVisibility();
 	ui.openGLWidget1->update();
 }
 
 void iGameMeshLab::slice_x_inverse_slot(int value)
 {
 	if (sceneManger->last_clicked_item == nullptr) return;
-	sceneManger->last_clicked_item->get_mesh()->set_slice_inverse_x(!!value);
+	sceneManger->last_clicked_item->GetMesh()->SetSliceInverseX(!!value);
 }
 
 void iGameMeshLab::slice_y_inverse_slot(int value)
 {
 	if (sceneManger->last_clicked_item == nullptr) return;
-	sceneManger->last_clicked_item->get_mesh()->set_slice_inverse_y(!!value);
+	sceneManger->last_clicked_item->GetMesh()->SetSliceInverseY(!!value);
 }
 
 void iGameMeshLab::slice_z_inverse_slot(int value)
 {
 	if (sceneManger->last_clicked_item == nullptr) return;
-	sceneManger->last_clicked_item->get_mesh()->set_slice_inverse_z(!!value);
+	sceneManger->last_clicked_item->GetMesh()->SetSliceInverseZ(!!value);
 }
 
 void iGameMeshLab::slice_x_rate_slot(int value)
 {
 	if (sceneManger->last_clicked_item == nullptr) return;
-	sceneManger->last_clicked_item->get_mesh()->set_slice_rate_x((double)value);
+	sceneManger->last_clicked_item->GetMesh()->SetSliceRateX((double)value);
 }
 
 void iGameMeshLab::slice_y_rate_slot(int value)
 {
 	if (sceneManger->last_clicked_item == nullptr) return;
-	sceneManger->last_clicked_item->get_mesh()->set_slice_rate_y((double)value);
+	sceneManger->last_clicked_item->GetMesh()->SetSliceRateY((double)value);
 }
 
 void iGameMeshLab::slice_z_rate_slot(int value)
 {
 	if (sceneManger->last_clicked_item == nullptr) return;
-	sceneManger->last_clicked_item->get_mesh()->set_slice_rate_z((double)value);
+	sceneManger->last_clicked_item->GetMesh()->SetSliceRateZ((double)value);
 }
 
 void iGameMeshLab::MenuClicked(QAction* action)
@@ -200,8 +200,8 @@ void iGameMeshLab::MenuClicked(QAction* action)
 			return;
 
 		SceneModelItem* item = new SceneModelItem();
-		item->load_trimesh(filePath.toStdString());
-		sceneManger->add_item(item);
+		item->LoadTrimesh(filePath.toStdString());
+		sceneManger->Add(item);
 	}
 	else if (action == ui.open_quadmesh) //打开四边形表面网格
 	{
@@ -211,8 +211,8 @@ void iGameMeshLab::MenuClicked(QAction* action)
 			return;
 
 		SceneModelItem* item = new SceneModelItem();
-		item->load_quadmesh(filePath.toStdString());
-		sceneManger->add_item(item);
+		item->LoadQuadmesh(filePath.toStdString());
+		sceneManger->Add(item);
 	}
 	else if (action == ui.open_polymesh) //打开多边形表面网格
 	{
@@ -222,8 +222,8 @@ void iGameMeshLab::MenuClicked(QAction* action)
 			return;
 
 		SceneModelItem* item = new SceneModelItem();
-		item->load_polygonmesh(filePath.toStdString());
-		sceneManger->add_item(item);
+		item->LoadPolygonmesh(filePath.toStdString());
+		sceneManger->Add(item);
 	}
 	else if (action == ui.open_tetmesh) //打开四面体网格
 	{
@@ -233,8 +233,8 @@ void iGameMeshLab::MenuClicked(QAction* action)
 			return;
 
 		SceneModelItem* item = new SceneModelItem();
-		item->load_tetmesh(filePath.toStdString());
-		sceneManger->add_item(item);
+		item->LoadTetmesh(filePath.toStdString());
+		sceneManger->Add(item);
 	}	
 	else if (action == ui.open_quadtimesh) //打开六面体网格
 	{
@@ -244,8 +244,8 @@ void iGameMeshLab::MenuClicked(QAction* action)
 			return;
 
 		SceneModelItem* item = new SceneModelItem();
-		item->load_hexmesh(filePath.toStdString());
-		sceneManger->add_item(item);
+		item->LoadHexmesh(filePath.toStdString());
+		sceneManger->Add(item);
 	}
 	else if (action == ui.open_polytimesh) //打开多面体网格
 	{
@@ -255,8 +255,8 @@ void iGameMeshLab::MenuClicked(QAction* action)
 			return;
 
 		SceneModelItem* item = new SceneModelItem();
-		item->load_polyhedralmesh(filePath.toStdString());
-		sceneManger->add_item(item);
+		item->LoadPolyhedralmesh(filePath.toStdString());
+		sceneManger->Add(item);
 	}
 	ui.openGLWidget1->update();
 }

@@ -12,9 +12,9 @@ public:
 	ActorBase(){}
 	virtual ~ActorBase(){}
 
-	virtual void init(QOpenGLFunctions_3_3_Core* core_) = 0;
-	virtual void render() = 0;
+	virtual void Init(QOpenGLFunctions_3_3_Core* core_) = 0;
+	virtual void Render() = 0;
 
-	void set_opengl(QOpenGLFunctions_3_3_Core* core_) { core = core_; }
+	inline void SetOpenglCore(QOpenGLFunctions_3_3_Core* core_) { core = core_; }
 };
 

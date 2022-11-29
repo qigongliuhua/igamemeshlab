@@ -11,25 +11,24 @@
 class SceneManger
 {
 public:
-	SceneManger(QVBoxLayout* list_widget_) :list_widget(list_widget_) {}
+	SceneManger(QVBoxLayout* list_widget_) :container(list_widget_) {}
 	SceneManger() {}
 	~SceneManger() {}
 
-	void set_list_widget(QVBoxLayout* list_widget_) { list_widget = list_widget_; }
+	void SetContainer(QVBoxLayout* container_) { container = container_; }
+	inline void AddChangeFocusListener(std::function<void(SceneModelItem*)> listener) { change_focus_item_listener.push_back(listener); }; //焦点item变换时触发
 
-	void add_item(SceneModelItem* item);
-	void remove_at(int index);
-	void remove_item(SceneModelItem* item);
-	int count() { return (int)items.size(); }
+	void Add(SceneModelItem* item);
+	void RemoveAt(int index);
+	void Remove(SceneModelItem* item);
+	int Size() { return (int)items.size(); }
 
-	QVBoxLayout* list_widget = nullptr;
+	QVBoxLayout* container = nullptr;
 	std::vector<SceneModelItem* >items; 
 	std::vector<SceneModelItem* > need_delete_items; //稍后再opengl的环境下释放
-
 	SceneModelItem* last_clicked_item = nullptr; //上一次选中的item
 
-	inline void set_change_focus_item_listener(std::function<void(SceneModelItem*)> listener) { change_focus_item_listener = listener; }; //焦点item变换时触发
 private:
-	std::function<void(SceneModelItem*)> change_focus_item_listener;
+	std::vector<std::function<void(SceneModelItem*)>> change_focus_item_listener;
 };
 

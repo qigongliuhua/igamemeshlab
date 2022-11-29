@@ -16,15 +16,15 @@ public:
 	MaterialBase(QOpenGLFunctions_3_3_Core* core_) : core(core_) {}
 	virtual ~MaterialBase();
 
-	inline	void set_opengl	(QOpenGLFunctions_3_3_Core* core_) { core = core_; }
-	virtual void load_shaders() = 0;
-	virtual	void set_shaders	(std::vector<GLfloat>& verts, int vertex_size, std::vector<int> offset_in_one_vertex);
-	virtual	void render		(Camera& camera);
-	virtual	void render(QMatrix4x4& M, QMatrix4x4& V, QMatrix4x4& P);
-	virtual	void render		();
+	inline	void SetOpenglCore	(QOpenGLFunctions_3_3_Core* core_) { core = core_; }
+	virtual void LoadShaders() = 0;
+	virtual	void SetShadersData	(std::vector<GLfloat>& verts, int vertex_size, std::vector<int> offset_in_one_vertex);
+	virtual	void Render		(Camera& camera);
+	virtual	void Render(QMatrix4x4& M, QMatrix4x4& V, QMatrix4x4& P);
+	virtual	void Render		();
 
 protected:
-	void clear();
+	void ClearShadersData();
 
 	QOpenGLFunctions_3_3_Core* core = nullptr;
 	QOpenGLShaderProgram shader;

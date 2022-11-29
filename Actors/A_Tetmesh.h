@@ -9,15 +9,15 @@ public:
 	A_Tetmesh() {};
 	~A_Tetmesh() {}
 
-	void render() override;
+	void Render() override;
 
-	void load_model(const std::string& path) override;
-	void save_model(const std::string& path) override;
+	void LoadMesh(const std::string& path) override;
+	void SaveMesh(const std::string& path) override;
 
-	std::string get_filename() const { return filename; }
-	std::string get_filetype()const { return filetype; }
-	std::string get_filepath()const { return filepath; }
-	std::string get_full_filepath() const { return filepath + filename + "." + filetype; }
+	std::string GetMeshFileName() const { return filename; }
+	std::string GetMeshFileType()const { return filetype; }
+	std::string GetMeshFilePath()const { return filepath; }
+	std::string GetMeshFileFullPath() const { return filepath + filename + "." + filetype; }
 private:
 	cinolib::Tetmesh<> mesh;
 };
