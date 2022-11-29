@@ -27,6 +27,9 @@ public:
 	std::vector<SceneModelItem* > need_delete_items; //稍后再opengl的环境下释放
 
 	SceneModelItem* last_clicked_item = nullptr; //上一次选中的item
+
+	inline void set_change_focus_item_listener(std::function<void(SceneModelItem*)> listener) { change_focus_item_listener = listener; }; //焦点item变换时触发
 private:
+	std::function<void(SceneModelItem*)> change_focus_item_listener;
 };
 

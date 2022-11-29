@@ -115,12 +115,11 @@ add_executable(iGameMeshLab
     ${CINOLIB_FILE}
 )
 
-
 source_group(GUI FILES ${GUI_FILE})
 source_group(GL FILES ${GL_FILE})
 source_group(GL/Materials FILES ${MATERIAL_FILE})
 source_group(GL/Shader FILES ${SHADER_FILES})
-source_group(GL/Actors FILES ${ACTOR_FILE})
+source_group(Actors FILES ${ACTOR_FILE})
 source_group(Extern/cinolib FILES ${CINOLIB_FILE})
 source_group(Extern/cinolib/meshes FILES ${CINOLIB_MESH_FILE})
 source_group(Extern/cinolib/geometry FILES ${CINOLIB_GEO_FILE})

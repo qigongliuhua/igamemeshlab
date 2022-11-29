@@ -29,6 +29,14 @@ public slots:
 	void set_normalmode_smooth();
 	void toggle_world_coor();
 
+	void slice_x_inverse_slot(int value); //沿x轴切片反转
+	void slice_y_inverse_slot(int value); //沿y轴切片反转
+	void slice_z_inverse_slot(int value); //沿z轴切片反转
+	void slice_x_rate_slot(int value); //沿x轴切片百分比
+	void slice_y_rate_slot(int value); //沿y轴切片百分比
+	void slice_z_rate_slot(int value); //沿z轴切片百分比
+
+
 	void MenuClicked(QAction* action);
 private:
     Ui::iGameMeshLab ui;

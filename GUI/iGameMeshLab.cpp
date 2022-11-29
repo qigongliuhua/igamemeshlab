@@ -19,9 +19,41 @@ iGameMeshLab::iGameMeshLab(QWidget *parent)
 	connect(ui.normalMode_smooth, SIGNAL(clicked()), this, SLOT(set_normalmode_smooth()));
 	connect(ui.toggle_coor, SIGNAL(clicked()), this, SLOT(toggle_world_coor()));
 
+	connect(ui.slice_x_inverse, SIGNAL(stateChanged(int)), this, SLOT(slice_x_inverse_slot(int)));
+	connect(ui.slice_y_inverse, SIGNAL(stateChanged(int)), this, SLOT(slice_y_inverse_slot(int)));
+	connect(ui.slice_z_inverse, SIGNAL(stateChanged(int)), this, SLOT(slice_z_inverse_slot(int)));
+	connect(ui.slice_x_rate, SIGNAL(valueChanged(int)), this, SLOT(slice_x_rate_slot(int)));
+	connect(ui.slice_y_rate, SIGNAL(valueChanged(int)), this, SLOT(slice_y_rate_slot(int)));
+	connect(ui.slice_z_rate, SIGNAL(valueChanged(int)), this, SLOT(slice_z_rate_slot(int)));
+
 	ui.openGLWidget1->sceneManger = new SceneManger(ui.sceneList);
 	sceneManger = ui.openGLWidget1->sceneManger;
 	sceneManger->set_list_widget(ui.sceneList);
+
+	std::function<void(SceneModelItem*)> change_focus_listener = [&](SceneModelItem* item) {
+		if (item == nullptr || item->get_mesh() == nullptr) {
+			ui.slice_x_inverse->setChecked(false);
+			ui.slice_y_inverse->setChecked(false);
+			ui.slice_z_inverse->setChecked(false);
+			ui.slice_x_rate->setValue((int)0);
+			ui.slice_y_rate->setValue((int)0);
+			ui.slice_z_rate->setValue((int)0);
+		}
+		else {
+			double xr, yr, zr;
+			bool xi, yi, zi;
+			item->get_mesh()->get_slice_status(xr, yr, zr, xi, yi, zi);
+			ui.slice_x_inverse->setChecked(xi);
+			ui.slice_y_inverse->setChecked(yi);
+			ui.slice_z_inverse->setChecked(zi);
+			ui.slice_x_rate->setValue((int)xr);
+			ui.slice_y_rate->setValue((int)yr);
+			ui.slice_z_rate->setValue((int)zr);
+		}
+		
+	};
+
+	sceneManger->set_change_focus_item_listener(change_focus_listener);
 
 	connect(ui.menuBar, SIGNAL(triggered(QAction*)), this, SLOT(MenuClicked(QAction*)));
 }
@@ -112,9 +144,6 @@ void iGameMeshLab::set_normalmode_smooth()
 	if (sceneManger->last_clicked_item->get_mesh() == nullptr) return;
 	sceneManger->last_clicked_item->get_mesh()->set_normal_mode(Normal_Mode::Smooth);
 
-
-	
-
 	ui.openGLWidget1->update();
 }
 
@@ -123,6 +152,42 @@ void iGameMeshLab::toggle_world_coor()
 {
 	ui.openGLWidget1->world_coor.toggle_show();
 	ui.openGLWidget1->update();
+}
+
+void iGameMeshLab::slice_x_inverse_slot(int value)
+{
+	if (sceneManger->last_clicked_item == nullptr) return;
+	sceneManger->last_clicked_item->get_mesh()->set_slice_inverse_x(!!value);
+}
+
+void iGameMeshLab::slice_y_inverse_slot(int value)
+{
+	if (sceneManger->last_clicked_item == nullptr) return;
+	sceneManger->last_clicked_item->get_mesh()->set_slice_inverse_y(!!value);
+}
+
+void iGameMeshLab::slice_z_inverse_slot(int value)
+{
+	if (sceneManger->last_clicked_item == nullptr) return;
+	sceneManger->last_clicked_item->get_mesh()->set_slice_inverse_z(!!value);
+}
+
+void iGameMeshLab::slice_x_rate_slot(int value)
+{
+	if (sceneManger->last_clicked_item == nullptr) return;
+	sceneManger->last_clicked_item->get_mesh()->set_slice_rate_x((double)value);
+}
+
+void iGameMeshLab::slice_y_rate_slot(int value)
+{
+	if (sceneManger->last_clicked_item == nullptr) return;
+	sceneManger->last_clicked_item->get_mesh()->set_slice_rate_y((double)value);
+}
+
+void iGameMeshLab::slice_z_rate_slot(int value)
+{
+	if (sceneManger->last_clicked_item == nullptr) return;
+	sceneManger->last_clicked_item->get_mesh()->set_slice_rate_z((double)value);
 }
 
 void iGameMeshLab::MenuClicked(QAction* action)
@@ -140,9 +205,25 @@ void iGameMeshLab::MenuClicked(QAction* action)
 	}
 	else if (action == ui.open_quadmesh) //打开四边形表面网格
 	{
+		QString filePath = QFileDialog::getOpenFileName(this, tr("Load file"), tr(""), tr("Obj or Off od Stl Files(*.obj *.off *.stl)"));
+		//QString filePath = QFileDialog::getOpenFileName(this, tr("Load file"), tr(""), tr("Obj Files(*.obj)"));
+		if (filePath.isEmpty())
+			return;
+
+		SceneModelItem* item = new SceneModelItem();
+		item->load_quadmesh(filePath.toStdString());
+		sceneManger->add_item(item);
 	}
 	else if (action == ui.open_polymesh) //打开多边形表面网格
 	{
+		QString filePath = QFileDialog::getOpenFileName(this, tr("Load file"), tr(""), tr("Obj or Off od Stl Files(*.obj *.off *.stl)"));
+		//QString filePath = QFileDialog::getOpenFileName(this, tr("Load file"), tr(""), tr("Obj Files(*.obj)"));
+		if (filePath.isEmpty())
+			return;
+
+		SceneModelItem* item = new SceneModelItem();
+		item->load_polygonmesh(filePath.toStdString());
+		sceneManger->add_item(item);
 	}
 	else if (action == ui.open_tetmesh) //打开四面体网格
 	{
@@ -168,6 +249,14 @@ void iGameMeshLab::MenuClicked(QAction* action)
 	}
 	else if (action == ui.open_polytimesh) //打开多面体网格
 	{
+		QString filePath = QFileDialog::getOpenFileName(this, tr("Load file"), tr(""), tr("hybrid,hedra,mesh,vtu,vtk,tet(*.hybrid *.HYBRID *.hedra *.HEDRA *.mesh *.vtu *.vtk *.tet *.MESH *.VTU *.VTK *.TET)"));
+		//QString filePath = QFileDialog::getOpenFileName(this, tr("Load file"), tr(""), tr("Obj Files(*.obj)"));
+		if (filePath.isEmpty())
+			return;
+
+		SceneModelItem* item = new SceneModelItem();
+		item->load_polyhedralmesh(filePath.toStdString());
+		sceneManger->add_item(item);
 	}
 	ui.openGLWidget1->update();
 }

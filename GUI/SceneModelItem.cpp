@@ -30,11 +30,20 @@ void SceneModelItem::clear_mesh()
 	case SceneModelItem::TriMesh:
 		get_trimesh()->~A_Trimesh();
 		break;
+	case SceneModelItem::QuadMesh:
+		get_quadmesh()->~A_Quadmesh();
+		break;
+	case SceneModelItem::PolygonMesh:
+		get_polygonmesh()->~A_Polygonmesh();
+		break;
 	case SceneModelItem::TetMesh:
 		get_tetmesh()->~A_Tetmesh();
 		break;
 	case SceneModelItem::HexMesh:
 		get_hexmesh()->~A_Hexmesh();
+		break;
+	case SceneModelItem::PolyhedralMesh:
+		get_polyhedralmesh()->~A_Polyhedralmesh();
 		break;
 	default:
 		break;
@@ -47,10 +56,7 @@ void SceneModelItem::load_trimesh(const std::string& path)
 {
 	A_Trimesh* trimesh = new A_Trimesh();
 	trimesh->load_model(path.c_str());
-	mesh = dynamic_cast<ActorModelBase*>(trimesh);
-	meshtype = MeshType::TriMesh;
-
-	ui.model_name->setText(tr(trimesh->get_filename().c_str()));
+	load_trimesh(trimesh);
 }
 
 void SceneModelItem::load_trimesh(A_Trimesh* trimesh)
@@ -61,14 +67,41 @@ void SceneModelItem::load_trimesh(A_Trimesh* trimesh)
 	ui.model_name->setText(tr(trimesh->get_filename().c_str()));
 }
 
+void SceneModelItem::load_quadmesh(const std::string& path)
+{
+	A_Quadmesh* quadmesh = new A_Quadmesh();
+	quadmesh->load_model(path.c_str());
+	load_quadmesh(quadmesh);
+}
+
+void SceneModelItem::load_quadmesh(A_Quadmesh* quadmesh)
+{
+	mesh = dynamic_cast<ActorModelBase*>(quadmesh);
+	meshtype = MeshType::QuadMesh;
+
+	ui.model_name->setText(tr(quadmesh->get_filename().c_str()));
+}
+
+void SceneModelItem::load_polygonmesh(const std::string& path)
+{
+	A_Polygonmesh* polygonmesh = new A_Polygonmesh();
+	polygonmesh->load_model(path.c_str());
+	load_polygonmesh(polygonmesh);
+}
+
+void SceneModelItem::load_polygonmesh(A_Polygonmesh* polygonmesh)
+{
+	mesh = dynamic_cast<ActorModelBase*>(polygonmesh);
+	meshtype = MeshType::PolygonMesh;
+
+	ui.model_name->setText(tr(polygonmesh->get_filename().c_str()));
+}
+
 void SceneModelItem::load_tetmesh(const std::string& path)
 {
 	A_Tetmesh* tetmesh = new A_Tetmesh();
 	tetmesh->load_model(path.c_str());
-	mesh = dynamic_cast<ActorModelBase*>(tetmesh);
-	meshtype = MeshType::TetMesh;
-
-	ui.model_name->setText(tr(tetmesh->get_filename().c_str()));
+	load_tetmesh(tetmesh);
 }
 
 void SceneModelItem::load_tetmesh(A_Tetmesh* tetmesh)
@@ -83,10 +116,7 @@ void SceneModelItem::load_hexmesh(const std::string& path)
 {
 	A_Hexmesh* hexmesh = new A_Hexmesh();
 	hexmesh->load_model(path.c_str());
-	mesh = dynamic_cast<ActorModelBase*>(hexmesh);
-	meshtype = MeshType::HexMesh;
-
-	ui.model_name->setText(tr(hexmesh->get_filename().c_str()));
+	load_hexmesh(hexmesh);
 }
 
 void SceneModelItem::load_hexmesh(A_Hexmesh* hexmesh)
@@ -95,6 +125,21 @@ void SceneModelItem::load_hexmesh(A_Hexmesh* hexmesh)
 	meshtype = MeshType::HexMesh;
 
 	ui.model_name->setText(tr(hexmesh->get_filename().c_str()));
+}
+
+void SceneModelItem::load_polyhedralmesh(const std::string& path)
+{
+	A_Polyhedralmesh* polyhedralmesh = new A_Polyhedralmesh();
+	polyhedralmesh->load_model(path.c_str());
+	load_polyhedralmesh(polyhedralmesh);
+}
+
+void SceneModelItem::load_polyhedralmesh(A_Polyhedralmesh* polyhedralmesh)
+{
+	mesh = dynamic_cast<ActorModelBase*>(polyhedralmesh);
+	meshtype = MeshType::PolyhedralMesh;
+
+	ui.model_name->setText(tr(polyhedralmesh->get_filename().c_str()));
 }
 
 void SceneModelItem::toggle_show_model(int value)

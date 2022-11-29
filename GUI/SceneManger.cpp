@@ -11,11 +11,14 @@ void SceneManger::add_item(SceneModelItem* item)
 		for (auto it : items) {
 			it->update();
 		}
+
+		change_focus_item_listener(last_clicked_item);
 	};
 	std::function<void(SceneModelItem*)> delete_listener = [&](SceneModelItem* item) {
 		//int index = std::find(items.begin(), items.end(), item) - items.begin();
 		//if(index < this->count())
 		//	need_delete_items.push_back(item);
+		last_clicked_item = nullptr;
 		this->remove_item(item);
 		item->clear_mesh();
 	};
@@ -28,6 +31,7 @@ void SceneManger::add_item(SceneModelItem* item)
 		last_clicked_item = item;
 		last_clicked_item->is_focus = true;
 		last_clicked_item->update();
+		change_focus_item_listener(last_clicked_item);
 	}
 }
 

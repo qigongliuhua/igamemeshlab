@@ -38,6 +38,7 @@
 #include <cinolib/geometry/aabb.h>
 #include <cinolib/geometry/vec_mat.h>
 #include <cinolib/vector_serialization.h>
+#include <cinolib/quality.h>
 
 #include <algorithm>
 #include <cmath>
